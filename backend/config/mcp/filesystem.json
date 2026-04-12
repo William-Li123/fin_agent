@@ -1,0 +1,16 @@
+{
+  "id": "filesystem_main",
+  "enabled": true,
+  "server_name": "filesystem",
+  "namespace": "filesystem",
+  "transport": "stdio",
+  "command": "npx",
+  "package": "@modelcontextprotocol/server-filesystem",
+  "cwd": "${PROJECT_ROOT}\\agent_workspace",
+  "read_timeout_seconds": 60,
+  "npm_cache_dir": "${PROJECT_ROOT}\\.npm-cache",
+  "allowed_dirs": [
+    "${PROJECT_ROOT}\\agent_workspace"
+  ],
+  "env": {}
+}

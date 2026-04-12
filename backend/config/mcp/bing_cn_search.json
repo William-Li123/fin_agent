@@ -1,0 +1,14 @@
+{
+  "id": "bing_cn_search_main",
+  "enabled": true,
+  "server_name": "bing_cn_search",
+  "namespace": "bing",
+  "transport": "stdio",
+  "launch_mode": "cmd_npx",
+  "command": "cmd",
+  "package": "bing-cn-mcp",
+  "cwd": "${PROJECT_ROOT}",
+  "read_timeout_seconds": 60,
+  "npm_cache_dir": "${PROJECT_ROOT}\\.npm-cache",
+  "env": {}
+}

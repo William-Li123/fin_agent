@@ -1,0 +1,17 @@
+{
+  "id": "fetch_main",
+  "enabled": true,
+  "server_name": "fetch",
+  "namespace": "fetch",
+  "transport": "stdio",
+  "launch_mode": "python_module",
+  "command": "${PYTHON_EXECUTABLE}",
+  "cwd": "${PROJECT_ROOT}",
+  "read_timeout_seconds": 60,
+  "user_agent": "",
+  "ignore_robots_txt": false,
+  "proxy_url": "",
+  "env": {
+    "npm_config_cache": "${PROJECT_ROOT}\\.npm-cache"
+  }
+}

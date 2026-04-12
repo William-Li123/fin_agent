@@ -1,0 +1,57 @@
+{
+  "enabled": true,
+  "provider": "opensandbox",
+  "workspace_root": "${PROJECT_ROOT}\\agent_workspace",
+  "session_workspace_subdir": "sessions",
+  "connection": {
+    "protocol": "http",
+    "domain": "127.0.0.1:8080",
+    "api_key_env": "OPEN_SANDBOX_API_KEY",
+    "request_timeout_seconds": 180,
+    "debug": false
+  },
+  "runtime": {
+    "image": "python:3.11-slim",
+    "workspace_mount_path": "/workspace",
+    "timeout_seconds": 1800,
+    "ready_timeout_seconds": 60,
+    "resource": {
+      "cpu": "1",
+      "memory": "2Gi"
+    },
+    "environment": {},
+    "network_default_action": "deny",
+    "default_egress_targets": []
+  },
+  "server": {
+    "config_output_path": "${BACKEND_ROOT}\\sandbox\\runtime\\opensandbox.server.toml",
+    "host": "127.0.0.1",
+    "port": 8080,
+    "api_key_env": "OPEN_SANDBOX_API_KEY",
+    "max_sandbox_timeout_seconds": 86400,
+    "runtime_type": "docker",
+    "execd_image": "opensandbox/execd:v1.0.10",
+    "egress_image": "opensandbox/egress:v1.0.6",
+    "egress_mode": "dns",
+    "allowed_host_paths": [
+      "${PROJECT_ROOT}\\agent_workspace"
+    ],
+    "network_mode": "bridge",
+    "drop_capabilities": [
+      "AUDIT_WRITE",
+      "MKNOD",
+      "NET_ADMIN",
+      "NET_RAW",
+      "SYS_ADMIN",
+      "SYS_MODULE",
+      "SYS_PTRACE",
+      "SYS_TIME",
+      "SYS_TTY_CONFIG"
+    ],
+    "no_new_privileges": true,
+    "pids_limit": 256,
+    "ingress_mode": "direct",
+    "log_level": "INFO",
+    "log_to_file": true
+  }
+}

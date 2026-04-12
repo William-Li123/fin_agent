@@ -1,0 +1,65 @@
+{
+  "enabled": true,
+  "documents_root": "${PROJECT_ROOT}/raw_data",
+  "qdrant": {
+    "mode": "local",
+    "path": "${BACKEND_ROOT}/rag/storage/qdrant",
+    "collection_name": "knowledge_chunks",
+    "distance": "cosine",
+    "on_disk_payload": true
+  },
+  "chunking": {
+    "chunk_size": 1200,
+    "chunk_overlap": 240,
+    "min_chunk_chars": 120,
+    "separators": [
+      "\n\n",
+      "\n",
+      "。",
+      ". ",
+      "！",
+      "! ",
+      "？",
+      "? ",
+      "；",
+      "; ",
+      "，",
+      ", ",
+      " "
+    ]
+  },
+  "embedding": {
+    "provider": "sentence_transformers",
+    "model_path": "${BACKEND_ROOT}/rag/models/embedding",
+    "device": "cuda",
+    "batch_size": 16,
+    "normalize_embeddings": true,
+    "max_seq_length": 512
+  },
+  "reranking": {
+    "enabled": false,
+    "provider": "cross_encoder",
+    "model_path": "${BACKEND_ROOT}/rag/models/reranker",
+    "device": "cuda",
+    "top_n": 5,
+    "batch_size": 8,
+    "max_length": 512
+  },
+  "retrieval": {
+    "top_k": 8,
+    "prefetch_k": 24,
+    "score_threshold": null,
+    "max_context_chars": 12000
+  },
+  "query_expansion": {
+    "enabled": true,
+    "llm_config_path": "${BACKEND_ROOT}/config/llm.json",
+    "prompt_name": "query_expansion",
+    "max_alternate_queries": 2,
+    "include_hypothetical_answer": true
+  },
+  "ingestion": {
+    "skip_hidden_files": true,
+    "supported_extensions": []
+  }
+}

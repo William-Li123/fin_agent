@@ -1,0 +1,50 @@
+{
+  "enabled": true,
+  "oracle": {
+    "user": "${ORACLE_USER}",
+    "password": "${ORACLE_PASSWORD}",
+    "dsn": "${ORACLE_DSN}",
+    "min_pool_size": 1,
+    "max_pool_size": 4,
+    "pool_increment": 1,
+    "ping_interval_seconds": 60,
+    "stmt_cache_size": 20
+  },
+  "conversation": {
+    "table_name": "conversation_memory",
+    "char_limit": 10000,
+    "recent_turns_limit": 12
+  },
+  "summary": {
+    "table_name": "summary_memory",
+    "session_index_name": "summary_memory_session_idx",
+    "vector_index_name": "summary_memory_embedding_idx",
+    "top_k": 4,
+    "max_context_chars": 6000,
+    "distance": "COSINE",
+    "use_approximate_search": true,
+    "target_accuracy": 95,
+    "ivf_neighbor_partitions": 32
+  },
+  "persona": {
+    "table_name": "persona_memory",
+    "default_owner_scope": "default_user",
+    "max_items_in_context": 12
+  },
+  "embedding": {
+    "provider": "sentence_transformers",
+    "model_path": "${BACKEND_ROOT}/memory/models/embedding",
+    "device": "cuda",
+    "dimension": 1024,
+    "batch_size": 8,
+    "normalize_embeddings": true,
+    "max_seq_length": 512
+  },
+  "summarization": {
+    "prompt_name": "summary_compaction",
+    "llm_config_path": "${BACKEND_ROOT}/config/llm.json",
+    "temperature": 0,
+    "max_source_chars": 16000,
+    "max_summary_chars": 4000
+  }
+}
