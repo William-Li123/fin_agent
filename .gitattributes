@@ -1,3 +1,4 @@
 # Keep audited runtime and skill bytes identical across Windows/Linux checkouts.
 # Runtime fingerprints intentionally hash the exact installed source files.
-* -text
+# Native CRLF is valid; blank lines at EOF are permitted by this repository.
+* -text whitespace=blank-at-eol,space-before-tab,cr-at-eol,-blank-at-eof
