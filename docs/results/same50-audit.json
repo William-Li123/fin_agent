@@ -1,0 +1,728 @@
+{
+  "schema_version": 1,
+  "audited_at_utc": "2026-10-10T10:32:51.051309+00:00",
+  "audit_kind": "independent_read_only_recompute_and_posthoc_error_review",
+  "scope": "仅读取原始输入、保存结果、轨迹和只读SQLite账本；未调用API，未改Agent/提示/技能/评估器；只写本审计JSON。",
+  "source_artifacts": {
+    "old_predictions": {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+      "sha256": "2a23300fe75165d702cd271ab921a37ee2338f964fba87778bcd0c7305cb4bef"
+    },
+    "old_campaign": {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\campaign.json",
+      "sha256": "99bd9b9d517c0f1e8fb6fb89a9a829c7e6018a2bfbe44d3f179f576d29993170"
+    },
+    "old_manifest": {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\data\\finance\\final_20261010\\host\\manifest.json",
+      "sha256": "9b9b5693eac2cb5b8af3ffb48c955a8a92755f7bd54851979962ef8ab31a1364"
+    },
+    "old_gold": {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\data\\finance\\final_20261010\\host\\gold\\test.json",
+      "sha256": "49a4d22b14b426c2ba32649b4cbe36f18a92e6e28077aa3c9bedea24343c8d91"
+    },
+    "new_report": {
+      "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\report.json",
+      "sha256": "11c435c5b3cb336fdaff7a57ef5a8abcbe8331a6689ce17ea62d62bc8875b753"
+    },
+    "new_freeze": {
+      "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\freeze.json",
+      "sha256": "947734738e12081c40580699eadc5e850fd39488e33aebf07382bc94b5958f22"
+    },
+    "new_manifest": {
+      "path": "F:\\scientific paper\\finance-research-agent\\data\\same50_20261010\\host\\manifest.json",
+      "sha256": "f1c09b8e87f498fd0f2192bbf0b90d16d81ee22fef6d55a7ed52e4725812afb9"
+    },
+    "new_gold": {
+      "path": "F:\\scientific paper\\finance-research-agent\\data\\same50_20261010\\host\\gold\\test.json",
+      "sha256": "1f64d564a6f354cda62eb430fc9517f9d088d025ced04f8b1aca2100e7008dc4"
+    },
+    "new_harness": {
+      "path": "F:\\scientific paper\\finance-research-agent\\scripts\\compare_same50.py",
+      "sha256": "f1625b4d80e7094b556612cc46efeb4f16f027c33220dd013796509606f340a9"
+    }
+  },
+  "checks": {
+    "all_finished": true,
+    "manifest_hash": true,
+    "gold_hash": true,
+    "baseline_hash": true,
+    "legacy_manifest_hash": true,
+    "legacy_gold_hash": true,
+    "harness_hash": true,
+    "runtime_hash": true,
+    "skill_hash": true,
+    "case_order": true,
+    "report_freeze_copy": true,
+    "all_50_input_scope_freeze_checks": true,
+    "distinct_empty_sessions": true,
+    "report_call_ids_match_model_receipts": true,
+    "no_duplicate_model_call_ids": true,
+    "calls_do_not_overlap_prior": true,
+    "all_calls_since_freeze_covered": true,
+    "new_usage_matches_report": true,
+    "new_cost_matches_report": true,
+    "all_new_calls_settled": true,
+    "all_new_stages_belong_to_case_runs": true,
+    "old_answer_scorer_per_case_compatible": true,
+    "old_all_calls_reconciled": true,
+    "old_cost_totals_agree": true,
+    "paired_counts_match_report": true,
+    "new_total_matches_report": true,
+    "all_old_request_accounting_checks": true,
+    "all_new_request_accounting_checks": true
+  },
+  "check_failures": [],
+  "scoring": {
+    "method": "独立从每题result.json与旧原始gold.exe_ans重算，数值双方四舍五入五位小数；非completed、拒答、null和非有限值失败。",
+    "total": 50,
+    "old_answer_correct": 35,
+    "old_official_execution_correct": 35,
+    "old_official_program_correct": 31,
+    "new_answer_correct": 42,
+    "old_to_new_scorer_per_case_differences": [],
+    "new_report_per_case_differences": [],
+    "paired_counts": {
+      "both_correct": 34,
+      "improved": 8,
+      "regressed": 1,
+      "both_wrong": 7
+    },
+    "old_engineering_failures": 2,
+    "new_engineering_failures": 0,
+    "new_insufficient_evidence": 2,
+    "delta_percentage_points": 14,
+    "new_program_accuracy": null,
+    "all_original_labels_preserved": true
+  },
+  "cost_audit": {
+    "rates_cny_per_million": {
+      "input_miss": "2",
+      "input_hit": "0.04",
+      "output": "8"
+    },
+    "supplier_invoice_claimed": false,
+    "old": {
+      "attempts": 50,
+      "calls": 329,
+      "states": {
+        "reconciled": 329
+      },
+      "usage": {
+        "input_tokens": 1847443,
+        "input_cache_hit_tokens": 278656,
+        "input_cache_miss_tokens": 1568787,
+        "output_tokens": 76566,
+        "total_tokens": 1924009
+      },
+      "reasoning_tokens_note": "全部reasoning_tokens字段为null；没有将未报告当成显式零。",
+      "known_cost_cny": "3.76124824",
+      "request_cost_matches_attempt_cost": true,
+      "all_fifty_usage_sidecars_match_campaign": true,
+      "stage_counts": {
+        "planner": 50,
+        "executor": 229,
+        "finalizer": 50
+      }
+    },
+    "new": {
+      "calls": 258,
+      "states": {
+        "settled": 258
+      },
+      "usage": {
+        "completion_tokens": 19416,
+        "prompt_cache_hit_tokens": 1557504,
+        "prompt_cache_miss_tokens": 706148,
+        "prompt_tokens": 2263652,
+        "total_tokens": 2283068
+      },
+      "known_cost_cny": "1.62992416",
+      "model_call_id_set_sha256": "161ebfeceb177d3ef0201a780bdc4112fe1ce02efaf2beeeb9309ca69e84ae3a",
+      "model_receipt_count": 258,
+      "ledger_path": "F:\\scientific paper\\finance-research-agent\\.finagent\\budget.sqlite3",
+      "ledger_open_mode": "read-only",
+      "request_cost_or_usage_issues": []
+    },
+    "known_cost_change_cny": "-2.13132408",
+    "known_cost_reduction_percent": 56.66533937680221,
+    "old_input_cache_hit_ratio": 0.15083334100158977,
+    "new_input_cache_hit_ratio": 0.6880492231138001,
+    "interpretation": "调用和输出token下降，同时输入token增加、缓存命中率显著提高。费用变化混合了架构、提示长度、输出形式及缓存状态，不能完全归因于代码效率。"
+  },
+  "runtime_usage_audit": {
+    "loaded_skill_occurrences": {
+      "financial-ratios": 50
+    },
+    "learned_skill_loaded_count": 0,
+    "workspace_tool_dispatches": {
+      "finance_read_table": 50,
+      "finance_calculate": 48,
+      "finance_read_document": 14,
+      "finance_search_evidence": 17
+    },
+    "workspace_tool_dispatch_total": 129,
+    "workspace_tool_results": {
+      "success": 126,
+      "failure": 3
+    },
+    "context_read_actions": 14,
+    "all_tool_actions": 143,
+    "model_action_kinds": {
+      "skill": 50,
+      "tool": 143,
+      "finish": 50,
+      "invalid_or_validation_error": 15
+    },
+    "recoverable_action_errors": {
+      "Load the most relevant skill before executing financial calculations or code": 15,
+      "Invalid table row range: require 0 <= row_start <= row_end <= 4; row_end is exclusive. Omit row_end to read all rows.": 1,
+      "Column index is outside the table row.": 2
+    },
+    "finance_terminal_calls": 0,
+    "docker_execution_claim": "配置使用Docker后端，但这50题未调用finance_terminal，因此本轮不构成50题Docker代码执行测试。真实Docker终端能力需引用独立测试。"
+  },
+  "cohort_limitations": {
+    "distinct_cases": 50,
+    "distinct_company_year_groups": 46,
+    "distinct_document_pages": 47,
+    "repeated_source_groups": {
+      "GIS/2018": 2,
+      "LMT/2014": 2,
+      "SNA/2012": 2,
+      "TMUS/2017": 2
+    },
+    "prior_new_agent_exposure": [
+      {
+        "manifest": "F:\\scientific paper\\finance-research-agent\\data\\acceptance\\host\\manifest.json",
+        "sha256": "83adf05c0737d53b077f79206315a7f3c0254ba878d12f8372a7de96d54431fb",
+        "same_case_ids": [],
+        "same_source_group_case_ids": []
+      }
+    ],
+    "fresh_unseen_holdout": false,
+    "whole_system_comparison": true,
+    "old_max_model_calls": 12,
+    "new_max_steps": 14,
+    "test_time_learning": false,
+    "best_of_retry_selection": false
+  },
+  "changed_cases": [
+    {
+      "case_id": "AMT/2016/page_49.pdf-1",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": "0.08510011778563015312131919905771495877503",
+      "new_answer": 0.09301577084003862,
+      "expected_exe_ans": 0.09302,
+      "category": "score_gain_with_direction_semantics_risk",
+      "facts": [
+        "旧式为(101.88-93.21)/101.88，新式为(101.88-93.21)/93.21；新值匹配原gold。",
+        "原问题写highest to lowest，新解释明确写lowest to highest，方向表述发生反转。"
+      ],
+      "interpretation": "属于基准得分改善，但方向与分母语义存在风险，不能作为无争议金融分析改善。",
+      "semantic_risk": true,
+      "new_case_index": 3
+    },
+    {
+      "case_id": "GIS/2017/page_31.pdf-1",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": "0.1941516709511568123393316195372750642674",
+      "new_answer": 0.0728777169324295,
+      "expected_exe_ans": 0.07288,
+      "category": "denominator_scope_selection",
+      "facts": [
+        "旧分母为2018年全部合同义务3112.0；新分母为全部年份长期债务合同付款8290.6。",
+        "新计算604.2/8290.6匹配原gold，说明中明确长期债务口径。"
+      ],
+      "interpretation": "观察到分母范围选择改善；没有消融实验，不能单独归因于技能或架构。",
+      "new_case_index": 12
+    },
+    {
+      "case_id": "GIS/2018/page_110.pdf-2",
+      "old_correct": true,
+      "new_correct": false,
+      "old_answer": "0.2456642231360629358126229215090291435723",
+      "new_answer": 0.2459807073954984,
+      "expected_exe_ans": 0.24566,
+      "category": "lease_scope_mismatch_regression",
+      "facts": [
+        "旧按经营租赁137.4/559.3计算并匹配gold。",
+        "新合并经营与资本租赁，计算(137.4+0.3)/(559.3+0.5)，与原gold不一致。"
+      ],
+      "interpretation": "确定的配对退步来自租赁范围选择；问题措辞包含total，存在口径解释空间，仍保留原评分为错。",
+      "new_case_index": 13
+    },
+    {
+      "case_id": "GPN/2018/page_94.pdf-2",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": "108.51",
+      "new_answer": 117624.84,
+      "expected_exe_ans": 117624.84,
+      "category": "aggregate_value_vs_per_share",
+      "facts": [
+        "旧回答为每股公允价值108.51；新用1084千股乘108.51得到117624.84千元。"
+      ],
+      "interpretation": "观察到从每股指标到总价值的单位和量纲处理改善。",
+      "new_case_index": 18
+    },
+    {
+      "case_id": "GS/2018/page_78.pdf-3",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": null,
+      "new_answer": 1.136,
+      "expected_exe_ans": 1.136,
+      "category": "inverse_growth_derivation",
+      "facts": [
+        "旧因2016值未直接出现而拒答；新利用2017年1.42十亿美元及同比增长25%反推1.42/1.25=1.136。",
+        "新解释标明这是推导值。"
+      ],
+      "interpretation": "观察到从已提供增长关系反推基期的能力改善。",
+      "new_case_index": 21
+    },
+    {
+      "case_id": "MMM/2013/page_75.pdf-1",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": null,
+      "new_answer": 1.0861344537815125,
+      "expected_exe_ans": 1.08613,
+      "category": "narrative_evidence_retrieval",
+      "facts": [
+        "旧输出称只有税率表而拒答；新从叙述证据取得2011年517与2013年476的养老金贡献，计算517/476。",
+        "新过程出现一次表列越界工具错误，但随后恢复并完成。"
+      ],
+      "interpretation": "与叙述证据检索和工具错误恢复相关；未证明具体模块的因果贡献。",
+      "new_case_index": 30
+    },
+    {
+      "case_id": "PNC/2012/page_68.pdf-2",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": null,
+      "new_answer": -0.08422301304863582,
+      "expected_exe_ans": -0.08422,
+      "category": "score_gain_with_period_semantics_violation",
+      "facts": [
+        "问题要求2008至2009；输入表和新解释使用2011年的843与2012年的772。",
+        "新解释承认请求年份未提供，但仍计算(772-843)/843并以answered返回；数值匹配gold。",
+        "旧系统因请求年份缺失而拒答。"
+      ],
+      "interpretation": "确定存在用不匹配期间替代请求期间的行为。该题提高基准分数却不能代表金融质量改善；不主观修改gold或原分数。",
+      "semantic_risk": true,
+      "new_case_index": 37
+    },
+    {
+      "case_id": "RSG/2015/page_98.pdf-2",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": null,
+      "new_answer": 2.147751605995717,
+      "expected_exe_ans": 2.14775,
+      "category": "engineering_failure_recovered_context",
+      "facts": [
+        "旧因Latest observation精确结果/来源超上下文预算而中止。",
+        "新成功读取100.3与46.7并计算100.3/46.7，结果匹配gold。"
+      ],
+      "interpretation": "确定由旧工程失败转为完成并得分；不同运行路径下的整体验证，不能只归因于上下文实现。",
+      "new_case_index": 41
+    },
+    {
+      "case_id": "UNP/2016/page_52.pdf-3",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": null,
+      "new_answer": 0.1491284110614219,
+      "expected_exe_ans": 0.14913,
+      "category": "engineering_failure_recovered_output_contract",
+      "facts": [
+        "旧因Program must be a numeric arithmetic expression中止。",
+        "新用(2440+3237+4127)/(19941+21813+23988)产生有效计算回执，结果匹配gold。"
+      ],
+      "interpretation": "旧DSL格式失败在新数值回答路径中不再出现；新系统未输出官方DSL，不可据此声称程序准确率提高。",
+      "new_case_index": 48
+    }
+  ],
+  "new_incorrect_cases": [
+    {
+      "case_id": "CDW/2015/page_93.pdf-2",
+      "new_answer": null,
+      "expected_exe_ans": 1.26207,
+      "new_final_status": "insufficient_evidence",
+      "category": "expense_semantics_and_evidence_missed",
+      "facts": [
+        "新以EPS净利润缺失为由拒答，预测null；原gold为1.26207。",
+        "输入叙述实际披露2014及2013退休计划费用21.9和17.3，不能概括为所有费用证据均不存在。",
+        "原gold程序使用156.6/17.3 - 170.6/21.9，与通常expense per share的分子分母方向也存在疑问。"
+      ],
+      "interpretation": "模型误把费用问题转为净利润问题且遗漏相关叙述；同时记录标注方向疑点，不能以疑点免除拒答错分。",
+      "scoring_unchanged": true,
+      "new_case_index": 7
+    },
+    {
+      "case_id": "DVN/2012/page_77.pdf-1",
+      "new_answer": 0.1071673525377229,
+      "expected_exe_ans": 150,
+      "new_final_status": "answered",
+      "category": "denominator_and_percentage_scale_disagreement",
+      "facts": [
+        "新和旧均算(500+750)/11664约0.10717。",
+        "原gold是750/500再乘100，得到150。"
+      ],
+      "interpretation": "涉及期间合计占总额与年度金额比率两种问题解释，以及百分比尺度差异；不得按题修改尺度提示或gold。",
+      "scoring_unchanged": true,
+      "new_case_index": 9
+    },
+    {
+      "case_id": "GIS/2018/page_110.pdf-2",
+      "new_answer": 0.2459807073954984,
+      "expected_exe_ans": 0.24566,
+      "new_final_status": "answered",
+      "category": "lease_scope_mismatch_regression",
+      "facts": [
+        "旧按经营租赁137.4/559.3计算并匹配gold。",
+        "新合并经营与资本租赁，计算(137.4+0.3)/(559.3+0.5)，与原gold不一致。"
+      ],
+      "interpretation": "确定的配对退步来自租赁范围选择；问题措辞包含total，存在口径解释空间，仍保留原评分为错。",
+      "scoring_unchanged": true,
+      "new_case_index": 13
+    },
+    {
+      "case_id": "GPN/2008/page_78.pdf-1",
+      "new_answer": null,
+      "expected_exe_ans": 292.21429,
+      "new_final_status": "insufficient_evidence",
+      "category": "conservative_assumption_refusal_scored_wrong",
+      "facts": [
+        "新答insufficient_evidence且answer为null；原gold为4091/14。",
+        "来源说明客户无形资产摊销期up to 14 years；新解释指出单一寿命和实际摊销费未披露，并仅将4091/14作为需假设的示例。"
+      ],
+      "interpretation": "拒答有保守假设处理理由，但标准任务未答出，仍计为错误。不可将它包装为得分成功。",
+      "scoring_unchanged": true,
+      "new_case_index": 16
+    },
+    {
+      "case_id": "GPN/2010/page_89.pdf-4",
+      "new_answer": -0.06430446194225722,
+      "expected_exe_ans": -0.04148,
+      "new_final_status": "answered",
+      "category": "reference_operand_vs_visible_table_conflict",
+      "facts": [
+        "新旧均用2009年762股对应表中公允价值42，与2010年713股和42比较。",
+        "原gold程序将2009公允价值取41；可见表non-vested at may 31 2009该列为42。"
+      ],
+      "interpretation": "可见表与参考程序的操作数存在明确不一致，疑似标注问题；未改标签，仍按原gold计错。",
+      "scoring_unchanged": true,
+      "new_case_index": 17
+    },
+    {
+      "case_id": "KHC/2018/page_132.pdf-2",
+      "new_answer": 0.0865384615384615,
+      "expected_exe_ans": 0.07965,
+      "new_final_status": "answered",
+      "category": "repayment_denominator_assumption",
+      "facts": [
+        "新旧均用偿还额2.7除以年底账面债务31.2。",
+        "原gold用2.7/(31.2+2.7)，以加回偿还额构造分母。"
+      ],
+      "interpretation": "对偿还比例基数的定义不同；新解释披露了口径，但与标准答案不符。",
+      "scoring_unchanged": true,
+      "new_case_index": 26
+    },
+    {
+      "case_id": "SNA/2012/page_110.pdf-1",
+      "new_answer": -0.28005657708628007,
+      "expected_exe_ans": -905,
+      "new_final_status": "answered",
+      "category": "reference_operation_semantics_conflict",
+      "facts": [
+        "新旧按(509-707)/707计算百分比变化。",
+        "原gold程序连续两次减法subtract(509,707), subtract(#0,707)，结果-905。"
+      ],
+      "interpretation": "参考运算与percent change语义明显不一致，疑似标注问题；保持原评分不变。",
+      "scoring_unchanged": true,
+      "new_case_index": 42
+    },
+    {
+      "case_id": "SNA/2012/page_110.pdf-3",
+      "new_answer": 34551.09,
+      "expected_exe_ans": 658.13,
+      "new_final_status": "answered",
+      "category": "reference_operation_dimension_conflict",
+      "facts": [
+        "新旧用707千股乘每股48.87，计算总公允价值34551.09千元。",
+        "原gold用subtract(707,48.87)，得到658.13。"
+      ],
+      "interpretation": "参考程序将股数与每股价格相减，存在量纲与题意疑点；保持原gold错误判定。",
+      "scoring_unchanged": true,
+      "new_case_index": 43
+    }
+  ],
+  "scorer_correct_but_semantically_risky_gains": [
+    "AMT/2016/page_49.pdf-1",
+    "PNC/2012/page_68.pdf-2"
+  ],
+  "all_case_scores": [
+    {
+      "case_id": "AAL/2013/page_18.pdf-1",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "AAPL/2006/page_131.pdf-1",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "ABMD/2006/page_43.pdf-1",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "AMT/2016/page_49.pdf-1",
+      "old_correct": false,
+      "new_correct": true
+    },
+    {
+      "case_id": "AON/2007/page_188.pdf-3",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "BLL/2011/page_32.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "C/2009/page_243.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "CDW/2015/page_93.pdf-2",
+      "old_correct": false,
+      "new_correct": false
+    },
+    {
+      "case_id": "CMCSA/2015/page_67.pdf-1",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "DVN/2012/page_77.pdf-1",
+      "old_correct": false,
+      "new_correct": false
+    },
+    {
+      "case_id": "ETR/2004/page_212.pdf-3",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "ETR/2016/page_374.pdf-4",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "GIS/2017/page_31.pdf-1",
+      "old_correct": false,
+      "new_correct": true
+    },
+    {
+      "case_id": "GIS/2018/page_110.pdf-2",
+      "old_correct": true,
+      "new_correct": false
+    },
+    {
+      "case_id": "GIS/2018/page_110.pdf-3",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "GIS/2019/page_68.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "GPN/2008/page_78.pdf-1",
+      "old_correct": false,
+      "new_correct": false
+    },
+    {
+      "case_id": "GPN/2010/page_89.pdf-4",
+      "old_correct": false,
+      "new_correct": false
+    },
+    {
+      "case_id": "GPN/2018/page_94.pdf-2",
+      "old_correct": false,
+      "new_correct": true
+    },
+    {
+      "case_id": "GS/2013/page_126.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "GS/2015/page_188.pdf-1",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "GS/2018/page_78.pdf-3",
+      "old_correct": false,
+      "new_correct": true
+    },
+    {
+      "case_id": "HOLX/2007/page_93.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "ILMN/2008/page_86.pdf-3",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "JPM/2014/page_70.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "JPM/2015/page_137.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "KHC/2018/page_132.pdf-2",
+      "old_correct": false,
+      "new_correct": false
+    },
+    {
+      "case_id": "LMT/2014/page_50.pdf-3",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "LMT/2014/page_91.pdf-1",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "MMM/2007/page_23.pdf-1",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "MMM/2013/page_75.pdf-1",
+      "old_correct": false,
+      "new_correct": true
+    },
+    {
+      "case_id": "MMM/2015/page_93.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "MRK/2013/page_3.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "MRO/2013/page_39.pdf-3",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "MS/2013/page_132.pdf-1",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "NCLH/2018/page_97.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "PNC/2008/page_122.pdf-1",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "PNC/2012/page_68.pdf-2",
+      "old_correct": false,
+      "new_correct": true
+    },
+    {
+      "case_id": "PPG/2006/page_42.pdf-3",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "PPG/2012/page_29.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "RCL/2016/page_6.pdf-1",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "RSG/2015/page_98.pdf-2",
+      "old_correct": false,
+      "new_correct": true
+    },
+    {
+      "case_id": "SNA/2012/page_110.pdf-1",
+      "old_correct": false,
+      "new_correct": false
+    },
+    {
+      "case_id": "SNA/2012/page_110.pdf-3",
+      "old_correct": false,
+      "new_correct": false
+    },
+    {
+      "case_id": "STT/2014/page_54.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "TMUS/2017/page_29.pdf-1",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "TMUS/2017/page_29.pdf-4",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "UNP/2007/page_25.pdf-2",
+      "old_correct": true,
+      "new_correct": true
+    },
+    {
+      "case_id": "UNP/2016/page_52.pdf-3",
+      "old_correct": false,
+      "new_correct": true
+    },
+    {
+      "case_id": "UPS/2007/page_49.pdf-1",
+      "old_correct": true,
+      "new_correct": true
+    }
+  ],
+  "interpretation_limits": [
+    "35/50到42/50是这批历史题的完整系统答案评分变化，不是新独立留出集泛化结论。",
+    "八个得分改善中至少PNC年份替代与AMT方向反转存在明确语义风险，不能概括为八题金融质量均改善。",
+    "两个拒答仍计错；涉嫌标签问题也仍按原gold计错，没有主观加分。",
+    "全部五十题只加载内置financial-ratios，不能将增益归因于失败自动生成的技能。",
+    "只对改善、退步和错题作了语义审计；其余得分正确题未进行全面金融语义人工审查。",
+    "本审计只比较输出并解释可见差异，未进行消融，因此不能判定某一模块造成性能变化。",
+    "逐题路径见原report.results；new_case_index对应runs/same50_20261010/runs/case_NNN。"
+  ]
+}

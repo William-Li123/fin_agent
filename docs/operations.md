@@ -19,6 +19,8 @@
 
 网络断开或 usage 不可信时，账本保留预留并冻结新请求。此时先核对供应商用量记录，不能删除账本或创建新目录绕过总预算。当前版本没有自动清除未知费用的命令。SDK 不自动重试；提案格式修复属于另一次明确计费的模型调用。
 
+已经获得新的累计预算授权时，使用 `BudgetLedger.open(path).raise_ceiling(new_ceiling_cny, reason)` 追加上调记录。原始 `config` 保持不可修改；`status()` 的 `ceiling_cny` 返回有效上限，`initial_ceiling_cny` 返回初始上限；`authorizations()` 可查询授权历史。该操作禁止下调和重复上调，不会释放未知费用、清除使用记录或解除计费冻结。模型与工具不能自行调用这个宿主预算接口。本机 2026-10-10 的 ¥50→¥100 上调沿用同一个账本。
+
 ## Docker
 
 `finagent doctor` 检查 Docker 引擎与 `finance-agent-terminal:local` 镜像，完全离线于模型。若镜像不存在，按 README 构建。若 Docker 引擎报错，先修复 Docker Desktop；工具不会静默回退到宿主执行。

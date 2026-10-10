@@ -1,0 +1,760 @@
+{
+  "created_at": "2026-10-10T10:26:04.063249+00:00",
+  "dataset": "FinQA",
+  "total": 50,
+  "attempted": 50,
+  "all_finished": true,
+  "correct": 42,
+  "custom_answer_accuracy": 0.84,
+  "completed": 50,
+  "engineering_failures": 0,
+  "insufficient_evidence": 2,
+  "baseline": {
+    "source_path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\results.json",
+    "source_sha256": "2cb22c8e925fba1a2c9e343aacff73e717624b6d14f5ad0afbe8e96709dfe2e1",
+    "model": "deepseek-flash",
+    "settings": {
+      "model": "deepseek-flash",
+      "thinking": "disabled",
+      "temperature": 0,
+      "max_output_tokens": 2048,
+      "max_model_calls": 12,
+      "max_prompt_chars": 48000,
+      "mode": "terminal",
+      "backend": "docker",
+      "terminal_timeout_seconds": 60,
+      "per_attempt_cny": "1.5"
+    },
+    "cost_cny": {
+      "carried_prior": "18.93290396",
+      "development_including_failed_attempts": "0",
+      "holdout_including_failed_attempts": "3.76124824",
+      "total_including_prior": "22.69415220",
+      "inherited_unknown_transport_budget_reserved": "1.45567432",
+      "known_configured_usage_excluding_inherited_reserves": "21.23847788",
+      "current_unsettled_request_reservations": "0.000000",
+      "total_budget_commitment_including_reserves": "22.69415220",
+      "actual_charge_unknown_for_transport_request": true,
+      "ceiling": "50",
+      "exact_supplier_bill": false,
+      "rates": "Peak CNY/million: uncached input 2; cached input 0.04; output 8"
+    },
+    "model_calls": 329,
+    "metrics": {
+      "selection": "first attempt per preregistered test case",
+      "denominator": 50,
+      "attempted_cases": 50,
+      "all_cases_finished": true,
+      "completed_cases": 48,
+      "execution_correct": 35,
+      "program_correct": 31,
+      "answer_correct": 35,
+      "execution_accuracy": 0.7,
+      "program_accuracy": 0.62,
+      "answer_accuracy": 0.7,
+      "duplicate_case_attempts": {}
+    }
+  },
+  "paired_counts": {
+    "both_correct": 34,
+    "improved": 8,
+    "regressed": 1,
+    "both_wrong": 7
+  },
+  "delta_percentage_points": 14,
+  "new_program_accuracy": null,
+  "metric": "Numeric/yes-no final answer equality rounded to five decimals, raw FinQA exe_ans scale; not official DSL program accuracy",
+  "limitations": [
+    "Reused historical cohort, not a new unseen holdout",
+    "No test-time learning, tuning or best-of retries",
+    "Whole-system comparison; old/new iteration caps and prompt/tool architecture differ",
+    "Repeated company/year groups are retained; cases are not independent documents",
+    "Known cost uses configured peak rates, not the supplier invoice"
+  ],
+  "model_calls": 258,
+  "usage": {
+    "completion_tokens": 19416,
+    "prompt_cache_hit_tokens": 1557504,
+    "prompt_cache_miss_tokens": 706148,
+    "prompt_tokens": 2263652,
+    "total_tokens": 2283068
+  },
+  "known_cost_cny": "1.62992416",
+  "budget_after": {
+    "ceiling_cny": "100",
+    "carried_cny": "22.8483542",
+    "new_known_cny": "3.00903776",
+    "initial_ceiling_cny": "50",
+    "authorization_count": 1,
+    "new_reserved_cny": "0",
+    "all_committed_cny": "25.85739196",
+    "remaining_cny": "74.14260804",
+    "halted": false,
+    "calls_sent": 470,
+    "call_states": {
+      "settled": 470
+    },
+    "rates": {
+      "input_miss_cny_per_million": "2",
+      "input_hit_cny_per_million": "0.04",
+      "output_cny_per_million": "8",
+      "checked_at": "2026-10-10",
+      "label": "configured conservative rates; not a supplier invoice"
+    },
+    "account_bill_exact": false
+  },
+  "pairs": [
+    {
+      "case_id": "AAL/2013/page_18.pdf-1",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.02776184467133188,
+      "expected_answer": 0.02776,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_000"
+    },
+    {
+      "case_id": "AAPL/2006/page_131.pdf-1",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 599768,
+      "expected_answer": 599768,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_001"
+    },
+    {
+      "case_id": "ABMD/2006/page_43.pdf-1",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.8892784646613766,
+      "expected_answer": 0.88928,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_002"
+    },
+    {
+      "case_id": "AMT/2016/page_49.pdf-1",
+      "old_correct": false,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.09301577084003862,
+      "expected_answer": 0.09302,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_003"
+    },
+    {
+      "case_id": "AON/2007/page_188.pdf-3",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 17,
+      "expected_answer": 17,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_004"
+    },
+    {
+      "case_id": "BLL/2011/page_32.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 7657.1,
+      "expected_answer": 7657.1,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_005"
+    },
+    {
+      "case_id": "C/2009/page_243.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 1.5625,
+      "expected_answer": 1.5625,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_006"
+    },
+    {
+      "case_id": "CDW/2015/page_93.pdf-2",
+      "old_correct": false,
+      "new_correct": false,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": null,
+      "expected_answer": 1.26207,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_007"
+    },
+    {
+      "case_id": "CMCSA/2015/page_67.pdf-1",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.3446118851293716,
+      "expected_answer": 0.34461,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_008"
+    },
+    {
+      "case_id": "DVN/2012/page_77.pdf-1",
+      "old_correct": false,
+      "new_correct": false,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.1071673525377229,
+      "expected_answer": 150,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_009"
+    },
+    {
+      "case_id": "ETR/2004/page_212.pdf-3",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": -42.4,
+      "expected_answer": -42.4,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_010"
+    },
+    {
+      "case_id": "ETR/2016/page_374.pdf-4",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.01828749645591154,
+      "expected_answer": 0.01829,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_011"
+    },
+    {
+      "case_id": "GIS/2017/page_31.pdf-1",
+      "old_correct": false,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.0728777169324295,
+      "expected_answer": 0.07288,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_012"
+    },
+    {
+      "case_id": "GIS/2018/page_110.pdf-2",
+      "old_correct": true,
+      "new_correct": false,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.2459807073954984,
+      "expected_answer": 0.24566,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_013"
+    },
+    {
+      "case_id": "GIS/2018/page_110.pdf-3",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.2068657250134096,
+      "expected_answer": 0.20687,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_014"
+    },
+    {
+      "case_id": "GIS/2019/page_68.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.016961884945358285,
+      "expected_answer": 0.01696,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_015"
+    },
+    {
+      "case_id": "GPN/2008/page_78.pdf-1",
+      "old_correct": false,
+      "new_correct": false,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": null,
+      "expected_answer": 292.21429,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_016"
+    },
+    {
+      "case_id": "GPN/2010/page_89.pdf-4",
+      "old_correct": false,
+      "new_correct": false,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": -0.06430446194225722,
+      "expected_answer": -0.04148,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_017"
+    },
+    {
+      "case_id": "GPN/2018/page_94.pdf-2",
+      "old_correct": false,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 117624.84,
+      "expected_answer": 117624.84,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018"
+    },
+    {
+      "case_id": "GS/2013/page_126.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": -0.05958530702160841,
+      "expected_answer": -0.05959,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_019"
+    },
+    {
+      "case_id": "GS/2015/page_188.pdf-1",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.4504854368932039,
+      "expected_answer": 0.45049,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_020"
+    },
+    {
+      "case_id": "GS/2018/page_78.pdf-3",
+      "old_correct": false,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 1.136,
+      "expected_answer": 1.136,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_021"
+    },
+    {
+      "case_id": "HOLX/2007/page_93.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.8801519451410371,
+      "expected_answer": 0.88015,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_022"
+    },
+    {
+      "case_id": "ILMN/2008/page_86.pdf-3",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.1123690119760479,
+      "expected_answer": 0.11237,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_023"
+    },
+    {
+      "case_id": "JPM/2014/page_70.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.4631813598004352,
+      "expected_answer": 0.46318,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_024"
+    },
+    {
+      "case_id": "JPM/2015/page_137.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.4417614826482564,
+      "expected_answer": 0.44176,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_025"
+    },
+    {
+      "case_id": "KHC/2018/page_132.pdf-2",
+      "old_correct": false,
+      "new_correct": false,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.0865384615384615,
+      "expected_answer": 0.07965,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_026"
+    },
+    {
+      "case_id": "LMT/2014/page_50.pdf-3",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.001,
+      "expected_answer": 0.001,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_027"
+    },
+    {
+      "case_id": "LMT/2014/page_91.pdf-1",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 382.6666666666667,
+      "expected_answer": 382.66667,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_028"
+    },
+    {
+      "case_id": "MMM/2007/page_23.pdf-1",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.8883374689826303,
+      "expected_answer": 0.88834,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_029"
+    },
+    {
+      "case_id": "MMM/2013/page_75.pdf-1",
+      "old_correct": false,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 1.0861344537815125,
+      "expected_answer": 1.08613,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_030"
+    },
+    {
+      "case_id": "MMM/2015/page_93.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 1.2571428571428571,
+      "expected_answer": 1.25714,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_031"
+    },
+    {
+      "case_id": "MRK/2013/page_3.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": -0.016234104106395822,
+      "expected_answer": -0.01623,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_032"
+    },
+    {
+      "case_id": "MRO/2013/page_39.pdf-3",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.0309115760698139,
+      "expected_answer": 0.03091,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_033"
+    },
+    {
+      "case_id": "MS/2013/page_132.pdf-1",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.18024786903571852,
+      "expected_answer": 0.18025,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_034"
+    },
+    {
+      "case_id": "NCLH/2018/page_97.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.009708737864077669,
+      "expected_answer": 0.00971,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_035"
+    },
+    {
+      "case_id": "PNC/2008/page_122.pdf-1",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.11742602160638797,
+      "expected_answer": 0.11743,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_036"
+    },
+    {
+      "case_id": "PNC/2012/page_68.pdf-2",
+      "old_correct": false,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": -0.08422301304863582,
+      "expected_answer": -0.08422,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_037"
+    },
+    {
+      "case_id": "PPG/2006/page_42.pdf-3",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 1.5,
+      "expected_answer": 1.5,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_038"
+    },
+    {
+      "case_id": "PPG/2012/page_29.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 92,
+      "expected_answer": 92,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_039"
+    },
+    {
+      "case_id": "RCL/2016/page_6.pdf-1",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 1687.9194630872482,
+      "expected_answer": 1687.91946,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_040"
+    },
+    {
+      "case_id": "RSG/2015/page_98.pdf-2",
+      "old_correct": false,
+      "new_correct": true,
+      "old_status": "error",
+      "new_status": "completed",
+      "predicted_answer": 2.147751605995717,
+      "expected_answer": 2.14775,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_041"
+    },
+    {
+      "case_id": "SNA/2012/page_110.pdf-1",
+      "old_correct": false,
+      "new_correct": false,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": -0.28005657708628007,
+      "expected_answer": -905,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_042"
+    },
+    {
+      "case_id": "SNA/2012/page_110.pdf-3",
+      "old_correct": false,
+      "new_correct": false,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 34551.09,
+      "expected_answer": 658.13,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_043"
+    },
+    {
+      "case_id": "STT/2014/page_54.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": -0.11403508771929824,
+      "expected_answer": -0.11404,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_044"
+    },
+    {
+      "case_id": "TMUS/2017/page_29.pdf-1",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 21311.475409836065,
+      "expected_answer": 21311.47541,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_045"
+    },
+    {
+      "case_id": "TMUS/2017/page_29.pdf-4",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 1.8888888888888888,
+      "expected_answer": 1.88889,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_046"
+    },
+    {
+      "case_id": "UNP/2007/page_25.pdf-2",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 0.1378472222222222,
+      "expected_answer": 0.13785,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_047"
+    },
+    {
+      "case_id": "UNP/2016/page_52.pdf-3",
+      "old_correct": false,
+      "new_correct": true,
+      "old_status": "error",
+      "new_status": "completed",
+      "predicted_answer": 0.1491284110614219,
+      "expected_answer": 0.14913,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_048"
+    },
+    {
+      "case_id": "UPS/2007/page_49.pdf-1",
+      "old_correct": true,
+      "new_correct": true,
+      "old_status": "completed",
+      "new_status": "completed",
+      "predicted_answer": 28809,
+      "expected_answer": 28809,
+      "run_dir": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_049"
+    }
+  ],
+  "freeze": {
+    "created_at": "2026-10-10T10:22:14.293431+00:00",
+    "manifest_sha256": "f1c09b8e87f498fd0f2192bbf0b90d16d81ee22fef6d55a7ed52e4725812afb9",
+    "runtime_fingerprint": "7cf1e9f3b6951fe00afcde5a819583a8c17c6ab4c2a0c58f2064ba4696e2b48c",
+    "harness_sha256": "f1625b4d80e7094b556612cc46efeb4f16f027c33220dd013796509606f340a9",
+    "skill_fingerprint": "adb29c064f2cc3db89f0ab68095bddfb626728986e9c47fd95522ae464f769c1",
+    "case_ids": [
+      "AAL/2013/page_18.pdf-1",
+      "AAPL/2006/page_131.pdf-1",
+      "ABMD/2006/page_43.pdf-1",
+      "AMT/2016/page_49.pdf-1",
+      "AON/2007/page_188.pdf-3",
+      "BLL/2011/page_32.pdf-2",
+      "C/2009/page_243.pdf-2",
+      "CDW/2015/page_93.pdf-2",
+      "CMCSA/2015/page_67.pdf-1",
+      "DVN/2012/page_77.pdf-1",
+      "ETR/2004/page_212.pdf-3",
+      "ETR/2016/page_374.pdf-4",
+      "GIS/2017/page_31.pdf-1",
+      "GIS/2018/page_110.pdf-2",
+      "GIS/2018/page_110.pdf-3",
+      "GIS/2019/page_68.pdf-2",
+      "GPN/2008/page_78.pdf-1",
+      "GPN/2010/page_89.pdf-4",
+      "GPN/2018/page_94.pdf-2",
+      "GS/2013/page_126.pdf-2",
+      "GS/2015/page_188.pdf-1",
+      "GS/2018/page_78.pdf-3",
+      "HOLX/2007/page_93.pdf-2",
+      "ILMN/2008/page_86.pdf-3",
+      "JPM/2014/page_70.pdf-2",
+      "JPM/2015/page_137.pdf-2",
+      "KHC/2018/page_132.pdf-2",
+      "LMT/2014/page_50.pdf-3",
+      "LMT/2014/page_91.pdf-1",
+      "MMM/2007/page_23.pdf-1",
+      "MMM/2013/page_75.pdf-1",
+      "MMM/2015/page_93.pdf-2",
+      "MRK/2013/page_3.pdf-2",
+      "MRO/2013/page_39.pdf-3",
+      "MS/2013/page_132.pdf-1",
+      "NCLH/2018/page_97.pdf-2",
+      "PNC/2008/page_122.pdf-1",
+      "PNC/2012/page_68.pdf-2",
+      "PPG/2006/page_42.pdf-3",
+      "PPG/2012/page_29.pdf-2",
+      "RCL/2016/page_6.pdf-1",
+      "RSG/2015/page_98.pdf-2",
+      "SNA/2012/page_110.pdf-1",
+      "SNA/2012/page_110.pdf-3",
+      "STT/2014/page_54.pdf-2",
+      "TMUS/2017/page_29.pdf-1",
+      "TMUS/2017/page_29.pdf-4",
+      "UNP/2007/page_25.pdf-2",
+      "UNP/2016/page_52.pdf-3",
+      "UPS/2007/page_49.pdf-1"
+    ],
+    "config": {
+      "max_steps": 14,
+      "context_chars": 60000,
+      "terminal_backend": "docker",
+      "learn_on_failure": false,
+      "max_loaded_skills": 3
+    },
+    "model": {
+      "name": "deepseek-flash",
+      "base_url": "https://api.deepseek.com",
+      "max_output_tokens": 2048,
+      "timeout": 90,
+      "temperature": 0,
+      "thinking": "disabled"
+    },
+    "benchmark_note": "\nEvaluation output convention: return a numeric raw arithmetic result (not a formatted percent string).\nFor percentage or growth ratios, use the fraction resulting from division without a presentation-only multiplication by one hundred.\nAmounts retain the source scale unless the question asks a unit conversion. The explanation may additionally state formatted percentages.\nThis convention is benchmark-specific; do not apply it to unrelated user reports.",
+    "budget_before": {
+      "ceiling_cny": "100",
+      "carried_cny": "22.8483542",
+      "new_known_cny": "1.3791136",
+      "initial_ceiling_cny": "50",
+      "authorization_count": 1,
+      "new_reserved_cny": "0",
+      "all_committed_cny": "24.2274678",
+      "remaining_cny": "75.7725322",
+      "halted": false,
+      "calls_sent": 212,
+      "call_states": {
+        "settled": 212
+      },
+      "rates": {
+        "input_miss_cny_per_million": "2",
+        "input_hit_cny_per_million": "0.04",
+        "output_cny_per_million": "8",
+        "checked_at": "2026-10-10",
+        "label": "configured conservative rates; not a supplier invoice"
+      },
+      "account_bill_exact": false
+    },
+    "protocol": "Exact historical test cohort, reused comparison; first attempt only; no learning or tuning",
+    "repeated_source_groups": {
+      "GIS/2018": 2,
+      "LMT/2014": 2,
+      "SNA/2012": 2,
+      "TMUS/2017": 2
+    },
+    "prior_new_agent_exposure": [
+      {
+        "manifest": "F:\\scientific paper\\finance-research-agent\\data\\acceptance\\host\\manifest.json",
+        "sha256": "83adf05c0737d53b077f79206315a7f3c0254ba878d12f8372a7de96d54431fb",
+        "same_case_ids": [],
+        "same_source_group_case_ids": []
+      }
+    ]
+  },
+  "old_usage": {
+    "prompt_tokens": 1847443,
+    "completion_tokens": 76566,
+    "total_tokens": 1924009,
+    "prompt_cache_hit_tokens": 278656,
+    "prompt_cache_miss_tokens": 1568787
+  },
+  "report_path": "runs/same50_20261010/report.json",
+  "environment": {
+    "python": "3.13.5",
+    "openai": "2.30.0",
+    "docker_engine": "29.3.1",
+    "docker_image": "sha256:9b9339c8072eac8572ba86742b7b6fefbf0372c40004ad54cb9dcd6e793368eb",
+    "runtime_fingerprint": "7cf1e9f3b6951fe00afcde5a819583a8c17c6ab4c2a0c58f2064ba4696e2b48c",
+    "archive_sha256": "55878011298132413fa79c10126345ac94bb369d7a6256f78e30129059f5917c"
+  },
+  "validation": {
+    "offline_suite": "261 passed, 2 skipped",
+    "explicit_live_docker": "1 passed",
+    "combined_unique_tests": "262 passed, 1 Windows symlink condition skipped"
+  },
+  "recovered_tool_error_cases": 17,
+  "tool_errors": 18,
+  "observed_tools": {
+    "finance_read_table": 50,
+    "finance_calculate": 48,
+    "finance_read_document": 14,
+    "finance_search_evidence": 17,
+    "context_read": 14,
+    "finance_terminal": 0
+  },
+  "observed_skills": {
+    "financial-ratios": 50,
+    "learned_skills": 0
+  },
+  "semantic_risk_cases_scored_correct": [
+    "AMT/2016/page_49.pdf-1",
+    "PNC/2012/page_68.pdf-2"
+  ]
+}

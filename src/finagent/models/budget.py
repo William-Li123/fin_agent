@@ -109,8 +109,10 @@ class Reservation:
 class BudgetLedger:
     """SQLite transactions make admission atomic across processes and threads.
 
-    Existing ledgers cannot be reopened with a different ceiling or carried
-    commitment. Audit events are append-only, including through normal SQL.
+    Existing ledgers cannot be reopened with a different initial ceiling or
+    carried commitment. Explicit budget increases are separate, append-only
+    authorizations; they never rewrite historical commitments or usage.
+    Audit events are append-only, including through normal SQL.
     Pending reservations survive process death; unknown outcomes freeze new
     calls. This object never stores prompts, completions, credentials or errors.
     """
@@ -135,6 +137,16 @@ class BudgetLedger:
                 CREATE TABLE IF NOT EXISTS events (
                     sequence INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL,
                     call_id TEXT NOT NULL, kind TEXT NOT NULL, data_json TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS authorizations (
+                    sequence INTEGER PRIMARY KEY AUTOINCREMENT CHECK(sequence > 0),
+                    authorization_id TEXT NOT NULL UNIQUE, created_at TEXT NOT NULL,
+                    previous_ceiling_nanos INTEGER NOT NULL CHECK(typeof(previous_ceiling_nanos)='integer'),
+                    ceiling_nanos INTEGER NOT NULL CHECK(typeof(ceiling_nanos)='integer'),
+                    reason TEXT NOT NULL CHECK(length(trim(reason)) BETWEEN 1 AND 1000),
+                    CHECK(ceiling_nanos > previous_ceiling_nanos));
+                CREATE TRIGGER IF NOT EXISTS config_no_replace BEFORE INSERT ON config
+                    WHEN EXISTS(SELECT 1 FROM config WHERE singleton=NEW.singleton)
+                    BEGIN SELECT RAISE(ABORT, 'Budget configuration is immutable'); END;
                 CREATE TRIGGER IF NOT EXISTS config_no_update BEFORE UPDATE ON config
                     BEGIN SELECT RAISE(ABORT, 'Budget configuration is immutable'); END;
                 CREATE TRIGGER IF NOT EXISTS config_no_delete BEFORE DELETE ON config
@@ -143,11 +155,29 @@ class BudgetLedger:
                     BEGIN SELECT RAISE(ABORT, 'Audit events are append-only'); END;
                 CREATE TRIGGER IF NOT EXISTS events_no_delete BEFORE DELETE ON events
                     BEGIN SELECT RAISE(ABORT, 'Audit events are append-only'); END;
+                CREATE TRIGGER IF NOT EXISTS authorizations_no_update BEFORE UPDATE ON authorizations
+                    BEGIN SELECT RAISE(ABORT, 'Budget authorizations are append-only'); END;
+                CREATE TRIGGER IF NOT EXISTS authorizations_no_delete BEFORE DELETE ON authorizations
+                    BEGIN SELECT RAISE(ABORT, 'Budget authorizations are append-only'); END;
+                CREATE TRIGGER IF NOT EXISTS authorizations_no_replace BEFORE INSERT ON authorizations
+                    WHEN EXISTS(SELECT 1 FROM authorizations
+                        WHERE sequence=NEW.sequence OR authorization_id=NEW.authorization_id)
+                    BEGIN SELECT RAISE(ABORT, 'Budget authorizations are append-only'); END;
+                CREATE TRIGGER IF NOT EXISTS authorizations_require_increase BEFORE INSERT ON authorizations
+                    WHEN NOT EXISTS(SELECT 1 FROM config WHERE singleton=1)
+                        OR NEW.previous_ceiling_nanos != COALESCE(
+                            (SELECT ceiling_nanos FROM authorizations ORDER BY sequence DESC LIMIT 1),
+                            (SELECT ceiling_nanos FROM config WHERE singleton=1))
+                        OR NEW.ceiling_nanos <= NEW.previous_ceiling_nanos
+                        OR (NEW.sequence != -1 AND NEW.sequence <= COALESCE((SELECT MAX(sequence) FROM authorizations),0))
+                    BEGIN SELECT RAISE(ABORT, 'Authorization must strictly increase the current ceiling'); END;
             """)
             conn.execute("BEGIN IMMEDIATE")
-            conn.execute("INSERT OR IGNORE INTO config VALUES (1, ?, ?, ?, 1)",
-                         (ceiling, carried, json.dumps(RATES, sort_keys=True)))
             existing = conn.execute("SELECT * FROM config WHERE singleton=1").fetchone()
+            if existing is None:
+                conn.execute("INSERT INTO config VALUES (1, ?, ?, ?, 1)",
+                             (ceiling, carried, json.dumps(RATES, sort_keys=True)))
+                existing = conn.execute("SELECT * FROM config WHERE singleton=1").fetchone()
             if (existing["ceiling_nanos"], existing["carried_nanos"], existing["rates_json"], existing["schema_version"]) != (
                     ceiling, carried, json.dumps(RATES, sort_keys=True), 1):
                 raise ValueError("Existing budget ceiling, carried commitments and rate schedule are immutable.")
@@ -189,11 +219,55 @@ class BudgetLedger:
     @staticmethod
     def _totals(conn: sqlite3.Connection) -> tuple[int, int, int, int, bool]:
         config = conn.execute("SELECT * FROM config WHERE singleton=1").fetchone()
+        authorization = conn.execute("SELECT ceiling_nanos FROM authorizations ORDER BY sequence DESC LIMIT 1").fetchone()
+        ceiling = authorization["ceiling_nanos"] if authorization else config["ceiling_nanos"]
         sums = conn.execute("""SELECT COALESCE(SUM(known_nanos),0) AS known,
             COALESCE(SUM(CASE WHEN status IN ('pending','unknown') THEN reserved_nanos ELSE 0 END),0) AS reserved,
             COALESCE(SUM(CASE WHEN status IN ('unknown','exceeded') THEN 1 ELSE 0 END),0) AS halted
             FROM calls""").fetchone()
-        return config["ceiling_nanos"], config["carried_nanos"], sums["known"], sums["reserved"], bool(sums["halted"])
+        return ceiling, config["carried_nanos"], sums["known"], sums["reserved"], bool(sums["halted"])
+
+    def raise_ceiling(self, new_ceiling_cny: Any, reason: str) -> dict[str, Any]:
+        """Record an explicitly authorized increase without changing prior costs.
+
+        This is a host/operator action, never a model tool. The caller must have
+        the user's authorization. Increasing the limit does not resolve uncertain
+        billing, release pending reservations, or count as a chargeable request.
+        Repeating an existing amount is rejected instead of creating duplicates.
+        """
+        ceiling = _money(new_ceiling_cny, "new_ceiling_cny")
+        if not isinstance(reason, str) or not 1 <= len(reason.strip()) <= 1000 or "\x00" in reason:
+            raise ValueError("A nonempty authorization reason of at most 1000 characters is required.")
+        reason = reason.strip()
+        if re.search(r"\bsk-[A-Za-z0-9_-]{12,}\b|\bBearer\s+\S+", reason, re.I):
+            raise ValueError("An authorization reason must not contain credentials.")
+        with self._connection() as conn:
+            conn.execute("BEGIN IMMEDIATE")
+            current, _, _, _, _ = self._totals(conn)
+            if ceiling <= current:
+                raise ValueError("The authorized ceiling must strictly exceed the current ceiling.")
+            identity = "authorization_" + uuid.uuid4().hex
+            created_at = datetime.now(UTC).isoformat()
+            cursor = conn.execute("""INSERT INTO authorizations
+                (authorization_id,created_at,previous_ceiling_nanos,ceiling_nanos,reason)
+                VALUES(?,?,?,?,?)""", (identity, created_at, current, ceiling, reason))
+            record = {"sequence": cursor.lastrowid, "authorization_id": identity, "created_at": created_at,
+                      "previous_ceiling_cny": _cny(current), "ceiling_cny": _cny(ceiling), "reason": reason}
+            self._event(conn, identity, "ceiling_raised", record)
+            conn.commit()
+        return record
+
+    def authorizations(self) -> list[dict[str, Any]]:
+        """Return immutable authorization history separately from model calls."""
+        with self._connection() as conn:
+            rows = conn.execute("SELECT * FROM authorizations ORDER BY sequence").fetchall()
+        result = []
+        for row in rows:
+            record = dict(row)
+            record["previous_ceiling_cny"] = _cny(record.pop("previous_ceiling_nanos"))
+            record["ceiling_cny"] = _cny(record.pop("ceiling_nanos"))
+            result.append(record)
+        return result
 
     def reserve(self, input_upper: int, output_upper: int, *, stage: str, model: str) -> Reservation:
         _integer(input_upper, "input_upper", positive=True)
@@ -259,7 +333,10 @@ class BudgetLedger:
             conn.execute("BEGIN")
             ceiling, carried, known, reserved, halted = self._totals(conn)
             counts = conn.execute("SELECT status,COUNT(*) AS count FROM calls GROUP BY status").fetchall()
+            initial_ceiling = conn.execute("SELECT ceiling_nanos FROM config WHERE singleton=1").fetchone()[0]
+            authorizations = conn.execute("SELECT COUNT(*) FROM authorizations").fetchone()[0]
         return {"ceiling_cny": _cny(ceiling), "carried_cny": _cny(carried), "new_known_cny": _cny(known),
+                "initial_ceiling_cny": _cny(initial_ceiling), "authorization_count": authorizations,
                 "new_reserved_cny": _cny(reserved), "all_committed_cny": _cny(carried + known + reserved),
                 "remaining_cny": _cny(ceiling - carried - known - reserved), "halted": halted,
                 "calls_sent": sum(row["count"] for row in counts),
