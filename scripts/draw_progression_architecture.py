@@ -1,8 +1,44 @@
 """Editable architecture comparison for the audited finance-agent progression."""
 from pathlib import Path
 import argparse
+import os
+import shutil
 import subprocess
+import sys
 import xml.etree.ElementTree as ET
+
+
+def find_drawio(explicit: str | None = None) -> Path | None:
+    """Resolve an explicit executable, PATH entry, or conventional installation."""
+    if explicit:
+        resolved = shutil.which(str(Path(explicit).expanduser()))
+        return Path(resolved) if resolved else None
+    for name in ("drawio", "draw.io", "drawio.exe", "draw.io.exe"):
+        resolved = shutil.which(name)
+        if resolved:
+            return Path(resolved)
+    candidates = []
+    if sys.platform == "win32":
+        for variable, suffix in (
+            ("LOCALAPPDATA", "Programs/draw.io/draw.io.exe"),
+            ("ProgramFiles", "draw.io/draw.io.exe"),
+            ("ProgramFiles(x86)", "draw.io/draw.io.exe"),
+        ):
+            if directory := os.environ.get(variable):
+                candidates.append(Path(directory) / suffix)
+    elif sys.platform == "darwin":
+        candidates = [
+            Path("/Applications/draw.io.app/Contents/MacOS/draw.io"),
+            Path.home() / "Applications/draw.io.app/Contents/MacOS/draw.io",
+        ]
+    else:
+        candidates = [Path(directory) / name for directory, name in (
+            ("/usr/bin", "drawio"), ("/usr/local/bin", "drawio"), ("/snap/bin", "drawio"),
+            ("/opt/drawio", "drawio"), ("/opt/draw.io", "draw.io"),
+        )]
+    return next((candidate for candidate in candidates
+                 if candidate.is_file() and os.access(candidate, os.X_OK)), None)
+
 
 root_path = Path(__file__).resolve().parents[1]
 output = root_path / "docs/research"
@@ -75,16 +111,17 @@ print(path)
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--export", action="store_true", help="Also try native PNG/SVG export; requires a working Electron runtime")
+    parser.add_argument("--drawio", metavar="EXECUTABLE", help="draw.io executable path or command; otherwise discover it automatically")
     args = parser.parse_args()
     if not args.export:
         raise SystemExit(0)
-    binary = Path("C:/Users/William/AppData/Local/Programs/draw.io/draw.io.exe")
-    if not binary.exists():
-        raise SystemExit("Editable XML generated; draw.io desktop is unavailable for local export")
+    binary = find_drawio(args.drawio)
+    if binary is None:
+        raise SystemExit("Editable XML generated; draw.io executable not found. Install draw.io or pass --drawio PATH")
     for extension, flags in (("png", ["--width", "2000"]), ("svg", ["-e"])):
         result = subprocess.run([str(binary), "-x", "-f", extension, *flags, "-b", "20", "-o",
                                  str(output / f"progression-architecture.{extension}"), str(path), "--disable-gpu"],
-                                capture_output=True, text=True, timeout=45, creationflags=subprocess.CREATE_NO_WINDOW)
+                                capture_output=True, text=True, timeout=45, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
         if result.returncode:
             raise RuntimeError(f"draw.io export failed: {result.stderr[:300]}")
         print(result.stdout.strip())

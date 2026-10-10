@@ -1,8 +1,10 @@
-# Finance Research Agent
+# fin_agent
 
 一个以来源证据为基础的金融研究 Agent：读财报、执行计算与 Python/Shell、生成报告和图表、持续保存会话，并把开发失败提炼成经过验证才能启用的技能。
 
-项目只保留一条 Agent 运行循环。金融方法、Docker 终端、记忆、技能和评估各自有明确模块；不依赖 LangGraph，也不同时维护多套执行后端。设计参考 Dexter 的按需技能、FinRobot 的金融方法分层和 RD-Agent 的实验反馈。来源说明见 [NOTICE.md](NOTICE.md)。
+项目只保留一条 Agent 运行循环。金融方法、Docker 终端、记忆、技能和评估各自有明确模块；不依赖 LangGraph。设计参考 Dexter 的按需技能、FinRobot 的金融方法分层和 RD-Agent 的实验反馈。来源说明见 [NOTICE.md](NOTICE.md)。
+
+仓库由原 `my_agent` 迁移为 `fin_agent`，主分支使用第二版金融实现；原型保留在 [归档分支](https://github.com/William-Li123/fin_agent/tree/archive/my-agent-before-fin-agent-20261010)。Python 发行包名仍为 `finance-research-agent`，导入包和命令仍为 `finagent`。
 
 ## 能做什么
 
@@ -20,9 +22,16 @@
 
 这里的完整性指**文档金融研究闭环**。不包含实盘交易、已接入的商业行情服务、PDF OCR 或 Excel 公式重算。引用有效、算术执行正确，也不能保证会计口径和判断永远正确。
 
+**目前模型质量验证主要基于 FinQA 财报片段。** Docker 报告、图表和记忆追问已真实跑通，但使用的仍是单页片段；多文档、完整年报和完整估值任务尚无真实 API 质量验收。能力实现与验证范围见 [实际验收](docs/validation.md)。
+
 ## 安装与开始
 
 需要 Python 3.11+。Docker 是执行代码时的默认后端。
+
+```shell
+git clone https://github.com/William-Li123/fin_agent.git
+cd fin_agent
+```
 
 ```powershell
 python -m pip install -e ".[documents,dev]"
@@ -32,10 +41,17 @@ finagent doctor
 
 模型默认是 `deepseek-flash`，API 根地址为 `https://api.deepseek.com`。`platform.deepseek.com/api_keys` 是账户管理网页，不能作为模型接口。
 
-凭据仅从 `DEEPSEEK_API_KEY` 进程环境变量读取，不需要写入仓库。PowerShell 可用交互输入设置当前窗口的变量：
+凭据仅从 `DEEPSEEK_API_KEY` 进程环境变量读取，不需要写入仓库。PowerShell 7 可用交互输入设置当前窗口的变量：
 
 ```powershell
 $env:DEEPSEEK_API_KEY = Read-Host "DeepSeek API key" -MaskInput
+```
+
+Bash 可使用：
+
+```bash
+read -rsp "DeepSeek API key: " DEEPSEEK_API_KEY
+export DEEPSEEK_API_KEY
 ```
 
 首次使用一个**全新**状态目录时，初始化自己授权的预算，再运行：
@@ -53,7 +69,7 @@ finagent budget status
 
 从单次模型基线、原始 `my_agent` 到两代金融 Agent 的代码与结果演进，见 [进步原因分析](docs/agent-progression-analysis.md)。报告逐题解释增分与退步，区分实际使用的能力、机制推断和仍需消融的贡献。
 
-**本机当前 `.finagent` 已初始化并继承此前 ¥22.84835420 的费用承诺；用户在 2026-10-10 将累计上限从 ¥50 提高到 ¥100。不要再用 `--carried 0` 初始化它。** 原配置保持不变，上调通过独立的追加授权记录生效；历史使用和预留不会清零。`budget status` 只读，不产生模型费用。所有生成、提案修复和技能验证共用此账本。按配置的高峰费率保守计价，并非供应商实扣账单。
+已有 `.finagent` 账本应继续使用，不能通过新建或清零状态目录绕过累计上限；外部已发生费用应在首次初始化时通过 `--carried` 纳入。`budget status` 只读，不产生模型费用。所有生成、提案修复和技能验证共用此账本，按配置费率保守计价，并非供应商实扣账单。历史实验费用见 [验收记录](docs/validation.md) 与 [50 题报告](docs/same50-comparison.md)。
 
 ## 导入自己的材料
 

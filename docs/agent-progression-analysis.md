@@ -43,7 +43,7 @@ FinQA 的原始设计包含金融文档问题与可执行推理程序，因此�
 
 ## 3. 你的原型提供了哪些真正有价值的基础
 
-原型已经实现 `planner→executor→tool/replan→finalizer` 的 LangGraph 工作流，以及 RAG、Oracle 对话/摘要/人设记忆、MCP、会话文件系统、OpenSandbox 终端。控制依靠状态路由，没有一个独立的 LLM controller 节点。原型的贡献是建立了**任务规划、行动、观察、再决策、会话状态和外部能力接入**的完整骨架。[原型工作流源码](https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/agent/graph.py#L11)、[原型记忆源码](https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/memory/service.py#L82)
+原型已经实现 `planner→executor→tool/replan→finalizer` 的 LangGraph 工作流，以及 RAG、Oracle 对话/摘要/人设记忆、MCP、会话文件系统、OpenSandbox 终端。控制依靠状态路由，没有一个独立的 LLM controller 节点。原型的贡献是建立了**任务规划、行动、观察、再决策、会话状态和外部能力接入**的完整骨架。[原型工作流源码](https://github.com/William-Li123/fin_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/agent/graph.py#L11)、[原型记忆源码](https://github.com/William-Li123/fin_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/memory/service.py#L82)
 
 这对复杂、跨工具、跨会话任务是合理的基础。例如检索外部资料、写入文件、执行代码，再继续用户追问，需要不同服务协作。第二版并不是首次补上这些能力，而是把其中适用于本地金融研究的部分重新组织。
 
@@ -94,7 +94,7 @@ flowchart LR
 
 ### 5.1 一条运行主路径，减少独立阶段转写
 
-第二版的 CLI、评测和候选技能验证共用一个 `ResearchAgent`。模型每次选择 `skill / tool / finish`；简单问题不强制先生成完整计划，已有计算结果也不必再转交一个独立 finalizer 改写为 DSL。[agent.py:107](<F:/scientific paper/finance-research-agent/src/finagent/core/agent.py:107>)
+第二版的 CLI、评测和候选技能验证共用一个 `ResearchAgent`。模型每次选择 `skill / tool / finish`；简单问题不强制先生成完整计划，已有计算结果也不必再转交一个独立 finalizer 改写为 DSL。[agent.py:107](../src/finagent/core/agent.py#L107)
 
 这是**控制流程与输出契约的收敛**。它不代表所有复杂任务都不需要规划，也不代表 LangGraph 框架导致低准确率；同样的单循环完全可以用 LangGraph 表达。真正改变的是必须经过哪些模型决策、哪些生成产物，以及哪些最终值由宿主核验。
 
@@ -112,23 +112,23 @@ flowchart LR
 | `finance_search_evidence` | 17 |
 | `finance_terminal` | 0 |
 
-工作区工具合计 129 次，其中 3 次失败后恢复；另有 14 次内部 `context_read`。旧 242 个 SDK 操作和新 129 个工作区调用的封装粒度不同，不能当成严格一对一速度比；但它们清楚显示了执行路径的变化。[workspace.py:103](<F:/scientific paper/finance-research-agent/src/finagent/tools/workspace.py:103>)
+工作区工具合计 129 次，其中 3 次失败后恢复；另有 14 次内部 `context_read`。旧 242 个 SDK 操作和新 129 个工作区调用的封装粒度不同，不能当成严格一对一速度比；但它们清楚显示了执行路径的变化。[workspace.py:103](../src/finagent/tools/workspace.py#L103)
 
 机制上的优势是减少 Python 语法、代码字符串转义、任意结果包装和中间输出的自由度。终端仍适合批量统计、文件处理和复杂分析；MCP 仍适合外部服务。**直接工具、终端、MCP 是不同任务的接口选择，MCP 是否存在不能解释这次正确率变化。**
 
 ### 5.3 用宿主计算回执承接最终数值
 
-成功计算由宿主生成 `calculation_id`，保存表达式、结果和来源。最终数值必须引用已观察的计算记录，数值与回执一致，来源覆盖计算所引用的证据。模型可以解释结果，但不能随意把一个没有计算回执的数值当成已完成结论。[validation.py:50](<F:/scientific paper/finance-research-agent/src/finagent/core/validation.py:50>)
+成功计算由宿主生成 `calculation_id`，保存表达式、结果和来源。最终数值必须引用已观察的计算记录，数值与回执一致，来源覆盖计算所引用的证据。模型可以解释结果，但不能随意把一个没有计算回执的数值当成已完成结论。[validation.py:50](../src/finagent/core/validation.py#L50)
 
 这解决的是“生成答案与已算结果之间的连接”。例如旧 UNP 题已经得到正确的 `0.149128…`，却因 finalizer 两次生成非法 DSL 而失败；新版引用直接计算回执交付该值，消除了这一特定输出障碍。
 
-边界同样明确：回执并没有逐个绑定 `operand→证据文本→年份→单位→转换`。当前 `finance_calculate` 的表达式和 evidence IDs 是分别传入的，只验证来源已读，不验证表达式每个数值必定由该来源推出。错误分母和错误年份也能生成合法回执。[tools.py:303](<F:/scientific paper/finance-research-agent/src/finagent/tools/tools.py:303>)
+边界同样明确：回执并没有逐个绑定 `operand→证据文本→年份→单位→转换`。当前 `finance_calculate` 的表达式和 evidence IDs 是分别传入的，只验证来源已读，不验证表达式每个数值必定由该来源推出。错误分母和错误年份也能生成合法回执。[tools.py:303](../src/finagent/tools/tools.py#L303)
 
 因此第二版实现的是**可核查的计算与来源链**，还不是完整的金融语义证明。
 
 ### 5.4 观察去重、有界上下文和可回读归档
 
-第二版保存完整事件；可见上下文去掉 `content` 与 `structured_content` 重复；单次观察过长时标记 `incomplete` 并给出归档入口；旧事件超出预算后保留索引，模型可以通过 `context_read` 取回需要的字符窗口。[context.py:19](<F:/scientific paper/finance-research-agent/src/finagent/core/context.py:19>)、[context.py:34](<F:/scientific paper/finance-research-agent/src/finagent/core/context.py:34>)
+第二版保存完整事件；可见上下文去掉 `content` 与 `structured_content` 重复；单次观察过长时标记 `incomplete` 并给出归档入口；旧事件超出预算后保留索引，模型可以通过 `context_read` 取回需要的字符窗口。[context.py:19](../src/finagent/core/context.py#L19)、[context.py:34](../src/finagent/core/context.py#L34)
 
 本 50 题有 14 次回读，分布于 4 题；`context_compactions` 合计 26，分布于 4 题。这个计数表示构造消息时发生历史归档的次数，不表示 26 个独立案例。
 
@@ -181,7 +181,7 @@ ReAct 的研究背景强调推理与行动交替、利用外部反馈修正决�
 | 失败生成技能 | `learn_on_failure=false`，学习生成技能加载 0 次 | 学习工程闭环存在；不能归因 70%→84% |
 | 多文档导入、图表报告 | 这批题未要求生成报告和图表 | 属于其他工作流验收，不能扩大解释这 50 题 |
 
-失败学习机制是：开发失败→模型提出候选→隔离→至少三个不同来源组的配对验证→无退步且至少一项改善→晋升/拒绝。先前真实候选在三题开发验证中是基线 3/3、候选 3/3，因此被拒绝，当前没有已激活的学习生成技能。[learning/service.py:313](<F:/scientific paper/finance-research-agent/src/finagent/learning/service.py:313>)
+失败学习机制是：开发失败→模型提出候选→隔离→至少三个不同来源组的配对验证→无退步且至少一项改善→晋升/拒绝。先前真实候选在三题开发验证中是基线 3/3、候选 3/3，因此被拒绝，当前没有已激活的学习生成技能。[learning/service.py:313](../src/finagent/learning/service.py#L313)
 
 Reflexion 为使用反馈与文本经验改进行为提供研究背景，但“能生成反思或 skill”本身不是有效性证据。这里选择保留验证与拒绝流程，而不是把生成成功当成性能提高。[Reflexion](https://arxiv.org/abs/2303.11366)
 
@@ -243,10 +243,10 @@ F2 请求减少 21.6%、输出减少 74.6%，但输入增加约 22.5%、总 toke
 - [离线统计与 50 题四视角布尔得分](research/progression-statistics.json)：配对、Wilson 区间、分组 bootstrap 与输入哈希。
 - [原 50 题完整对照报告](same50-comparison.md)：代码/技能冻结、逐题成绩和预算。
 
-离线统计与图表可复现：
+离线统计与图表脚本如下。统计复现需要原实验的本地输入、预测和轨迹；这些大体积历史文件不随仓库发布，JSON 审计中的原路径仅是历史来源标识。新测试可按 README 的数据准备和评测命令执行：
 
 ```powershell
-python scripts/analyze_progression.py --old-root "F:/scientific paper/research/finance_agent_api_preflight_20261008/my_agent" --figures
+python scripts/analyze_progression.py --old-root "/path/to/historical-my-agent" --figures
 python scripts/draw_progression_architecture.py
 ```
 
@@ -286,15 +286,15 @@ python scripts/draw_progression_architecture.py
 7. 非终态动作及错误观察落到事件文件；成功 finish 直接写入最终 history/result，不额外追加 context 事件。单次错误通常继续；连续四次动作/校验失败终止。默认最多 14 步，达到上限仍无有效 finish 则失败，步数可配置。
 8. 工程完成时保存最终答案和宿主可信记录为记忆；运行失败时保存诊断。进入主运行 try/finally 后的正常完成或失败路径，会保存 `trace.json/result.json` 并关闭工作区；问题校验、工作区初始化等在此之前失败，可能没有这两个最终文件。
 
-这条路径由 CLI、评测和候选技能验证共用，减少“交互演示用一套实现、评测又用另一套实现”的偏差。[agent.py:59](<F:/scientific paper/finance-research-agent/src/finagent/core/agent.py:59>)、[workspace.py:56](<F:/scientific paper/finance-research-agent/src/finagent/tools/workspace.py:56>)
+这条路径由 CLI、评测和候选技能验证共用，减少“交互演示用一套实现、评测又用另一套实现”的偏差。[agent.py:59](../src/finagent/core/agent.py#L59)、[workspace.py:56](../src/finagent/tools/workspace.py#L56)
 
-这里的动作 JSON 是文本协议：工具 schema 被写进模型消息，模型响应再由本地代码解析。当前客户端没有向供应商传原生 `tools`、`response_format` 或约束解码参数；不能把它描述为供应商已保证完全符合 schema 的原生函数调用。参数和结果仍由宿主校验，坏格式仍可能消耗一次请求。[client.py:116](<F:/scientific paper/finance-research-agent/src/finagent/models/client.py:116>)
+这里的动作 JSON 是文本协议：工具 schema 被写进模型消息，模型响应再由本地代码解析。当前客户端没有向供应商传原生 `tools`、`response_format` 或约束解码参数；不能把它描述为供应商已保证完全符合 schema 的原生函数调用。参数和结果仍由宿主校验，坏格式仍可能消耗一次请求。[client.py:116](../src/finagent/models/client.py#L116)
 
 ### 12.3 直接金融工具怎样把生成自由度收窄
 
 旧版读取一张表需要生成 Python 字符串、SDK 调用和输出包装。新版主要生成 `document_id/row_start/row_end/columns` 这些参数。表格行列越界会得到失败观察，模型可以根据具体错误修正，而不是让所有接口问题都表现为 Python 或 JSON 串错误。
 
-算术也不用执行任意代码。`safe_calculate()` 将表达式解析成 AST，支持有限的加减乘除、整数幂、变量和 `abs/min/max`；拒绝其他可执行语法。数字从表达式原始文本转换为 Decimal，计算精度为 40 位。它限制表达式长度、AST 节点数、嵌套和幂范围，并检查除零。[tools.py:43](<F:/scientific paper/finance-research-agent/src/finagent/tools/tools.py:43>)
+算术也不用执行任意代码。`safe_calculate()` 将表达式解析成 AST，支持有限的加减乘除、整数幂、变量和 `abs/min/max`；拒绝其他可执行语法。数字从表达式原始文本转换为 Decimal，计算精度为 40 位。它限制表达式长度、AST 节点数、嵌套和幂范围，并检查除零。[tools.py:43](../src/finagent/tools/tools.py#L43)
 
 这解决的是接口确定性和算术执行，不是金融含义。`604.2/3112.0` 和 `604.2/8290.6` 都是合法算术；哪一个分母符合问题，仍由模型决定。
 
@@ -310,9 +310,9 @@ python scripts/draw_progression_architecture.py
 | `observed_calculations` | `calculation_id → expression/variables/value/evidence_ids` | 成功计算工具或可信终端 SDK 计算 |
 | `observed_artifacts` | 报告、图表等产物记录 | 成功宿主产物工具 |
 
-普通终端 stdout 中出现同名 ID，不能直接建立这些状态。终端的可信记录来自宿主 SDK 对象，不来自对任意输出递归查找字段。最终校验还会合并同 scope 历史记忆中的计算回执。[workspace.py:138](<F:/scientific paper/finance-research-agent/src/finagent/tools/workspace.py:138>)
+普通终端 stdout 中出现同名 ID，不能直接建立这些状态。终端的可信记录来自宿主 SDK 对象，不来自对任意输出递归查找字段。最终校验还会合并同 scope 历史记忆中的计算回执。[workspace.py:138](../src/finagent/tools/workspace.py#L138)
 
-对于数值 `finish`，宿主主要检查：来源不重复且已观察；已回答结果非空；拒答的 answer 必须为 null；解释存在；引用的计算成功且具有单值 `value`；计算引用的证据被最终 sources 覆盖；最终数值与回执在 `max(1e-5, |value|×1e-6)` 容差内一致。工程“完成”表示通过这些条件，不表示外部标准答案匹配。[validation.py:19](<F:/scientific paper/finance-research-agent/src/finagent/core/validation.py:19>)
+对于数值 `finish`，宿主主要检查：来源不重复且已观察；已回答结果非空；拒答的 answer 必须为 null；解释存在；引用的计算成功且具有单值 `value`；计算引用的证据被最终 sources 覆盖；最终数值与回执在 `max(1e-5, |value|×1e-6)` 容差内一致。工程“完成”表示通过这些条件，不表示外部标准答案匹配。[validation.py:19](../src/finagent/core/validation.py#L19)
 
 UNP 的真实成功结果引用了 `calc_682ddcc986b244f6`：
 
@@ -342,7 +342,7 @@ finish.calculation_id = calc_682ddcc986b244f6
 | 回读/检索 | `context_read` 按字符窗口读当前事件 | 最近 3 轮，加词法重叠检索最多 3 个旧轮 |
 | 是否模型总结 | 当前压缩是确定性提取，不调用总结模型 | 当前召回是确定性词法方法，不是向量检索 |
 
-`scope_id` 绑定文档内容哈希，可以防止同名文件内容改变后继续复用旧结论。失败轮保留诊断，不进入成功结论记忆；历史成功结论作为数据注入，也不是对新问题的权威答案。[store.py:333](<F:/scientific paper/finance-research-agent/src/finagent/memory/store.py:333>)
+`scope_id` 绑定文档内容哈希，可以防止同名文件内容改变后继续复用旧结论。失败轮保留诊断，不进入成功结论记忆；历史成功结论作为数据注入，也不是对新问题的权威答案。[store.py:333](../src/finagent/memory/store.py#L333)
 
 这里的“成功”仅指 run 为 completed，包括明确的 `insufficient_evidence`。宿主数值评分失败的回答也可能已作为 completed 轮次保存；当前记忆不会因事后发现标准答案不匹配而自动撤销该结论。因此跨轮研究还需验证旧结论纠错与失效管理，不能把持久化直接等同于可靠知识库。
 
@@ -350,7 +350,7 @@ finish.calculation_id = calc_682ddcc986b244f6
 
 ### 12.6 Skill 的“存在、加载、遵守、有效”是四个不同层次
 
-现有六个内置技能为比率、来源对齐、报表勾稽、比较分析、DCF 和终端分析。目录仅暴露名称、描述、触发词、版本与 SHA；模型自行选择，`triggers` 不是自动规则分类器。正文按需加载，默认最多三个，运行期间目录指纹变化会终止。[registry.py:163](<F:/scientific paper/finance-research-agent/src/finagent/skills/registry.py:163>)
+现有六个内置技能为比率、来源对齐、报表勾稽、比较分析、DCF 和终端分析。目录仅暴露名称、描述、触发词、版本与 SHA；模型自行选择，`triggers` 不是自动规则分类器。正文按需加载，默认最多三个，运行期间目录指纹变化会终止。[registry.py:163](../src/finagent/skills/registry.py#L163)
 
 `financial-ratios` 要求先明确分子分母、读年份标题、保留单位和符号、区分增长率与百分点、执行公式、检查零分母。这是可复用方法提示，既不是新的工具权限，也不是底层模型参数更新。
 
@@ -362,8 +362,8 @@ finish.calculation_id = calc_682ddcc986b244f6
 
 存在两种失败感知入口：
 
-- 普通 `ask --learn-on-failure`：看到动作、工具或校验错误，或整个 run 失败，才记录经验并提案。无错误日志的金融语义答错，普通对话无法自行识别。[agent.py:184](<F:/scientific paper/finance-research-agent/src/finagent/core/agent.py:184>)
-- 开发集 `eval run --split dev --learn-on-failure`：宿主评分 `passed=false` 可以触发记录与提案，即使 run 已完成。没有运行错误时只给一般反馈“开发集评分拒绝该数值结论，请检查来源、期间、单位和计算；不提供参考答案”。标准答案不进入提案轨迹。[runner.py:77](<F:/scientific paper/finance-research-agent/src/finagent/evaluation/runner.py:77>)
+- 普通 `ask --learn-on-failure`：看到动作、工具或校验错误，或整个 run 失败，才记录经验并提案。无错误日志的金融语义答错，普通对话无法自行识别。[agent.py:184](../src/finagent/core/agent.py#L184)
+- 开发集 `eval run --split dev --learn-on-failure`：宿主评分 `passed=false` 可以触发记录与提案，即使 run 已完成。没有运行错误时只给一般反馈“开发集评分拒绝该数值结论，请检查来源、期间、单位和计算；不提供参考答案”。标准答案不进入提案轨迹。[runner.py:77](../src/finagent/evaluation/runner.py#L77)
 
 例如 PNC 数值恰好命中标准答案，但年份不符合问题，数值评分不会发现这种失败，所以也不会自动产生期间纠错技能。这要求外部语义审计或用户诊断，不能靠当前评分闭环自行解决。
 
@@ -378,7 +378,7 @@ finish.calculation_id = calc_682ddcc986b244f6
 
 该机制是经验转成方法、经过验证再激活，并未训练模型权重，也没有每次答错后立即覆盖主提示。目前真实候选 3/3 对 3/3，没有改善而被拒绝，恰好说明它有拒绝能力，不能证明它已学到有效方法。
 
-还有两项真实边界：三题验证样本很小；自定义评估回调如果双方都缺失 `evaluation_context`，当前相等检查会接受 `None==None`。正式 CLI 生成摘要，但摘要包含模型名、AgentConfig、数据选择、技能和运行源码，没有覆盖全部供应商客户端参数。这些应在扩大技能学习实验前补齐。[service.py:313](<F:/scientific paper/finance-research-agent/src/finagent/learning/service.py:313>)
+还有两项真实边界：三题验证样本很小；自定义评估回调如果双方都缺失 `evaluation_context`，当前相等检查会接受 `None==None`。正式 CLI 生成摘要，但摘要包含模型名、AgentConfig、数据选择、技能和运行源码，没有覆盖全部供应商客户端参数。这些应在扩大技能学习实验前补齐。[service.py:313](../src/finagent/learning/service.py#L313)
 
 ### 12.8 哪些案例说明“更直接”与“更准确”不能简单画等号
 
