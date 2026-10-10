@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finance-research-agent"
+version = "0.1.0"
+description = "Evidence-grounded financial research, sandbox tools, scoped memory and validated skill learning"
+requires-python = ">=3.11"
+dependencies = ["openai>=2.30,<3", "anyio>=4,<5", "pydantic>=2.10,<3"]
+
+[project.optional-dependencies]
+documents = ["pypdf>=5,<7", "openpyxl>=3.1,<4"]
+dev = ["pytest>=8,<10", "ruff>=0.11"]
+
+[project.scripts]
+finagent = "finagent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"finagent.skills" = ["builtin/**/SKILL.md", "builtins/**/SKILL.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = ["docker: requires a running Docker engine and finance-agent-terminal:local"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+

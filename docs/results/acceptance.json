@@ -1,0 +1,604 @@
+{
+  "date": "2026-10-10",
+  "model": "deepseek-flash",
+  "api_base": "https://api.deepseek.com",
+  "unique_evaluation_documents": 24,
+  "prior_company_year_groups_excluded": 160,
+  "metric": "custom_answer_accuracy: raw FinQA exe_ans scale rounded to five decimals; not official program accuracy",
+  "phases": {
+    "dev_v1": {
+      "split": "dev",
+      "total": 12,
+      "correct": 11,
+      "completed": 12,
+      "custom_answer_accuracy": 0.9166666666666666,
+      "freeze": {
+        "dataset_sha256": "340353ccf229db1e3a20a9aa6a98bdc0ffc0f942949b80d415557ecc63076a42",
+        "skill_fingerprint": "adb29c064f2cc3db89f0ab68095bddfb626728986e9c47fd95522ae464f769c1",
+        "case_ids": [
+          "MRO/2009/page_139.pdf-2",
+          "AAPL/2014/page_38.pdf-2",
+          "MRO/2006/page_33.pdf-3",
+          "ETR/2015/page_131.pdf-2",
+          "AMT/2010/page_34.pdf-4",
+          "ETR/2002/page_24.pdf-3",
+          "CDNS/2012/page_30.pdf-3",
+          "HUM/2017/page_133.pdf-1",
+          "ZBH/2003/page_58.pdf-1",
+          "HOLX/2012/page_113.pdf-1",
+          "IP/2007/page_75.pdf-1",
+          "APD/2013/page_36.pdf-2"
+        ],
+        "split": "dev",
+        "config": {
+          "max_steps": 14,
+          "context_chars": 60000,
+          "terminal_backend": "docker",
+          "learn_on_failure": false,
+          "max_loaded_skills": 3
+        },
+        "model": "deepseek-flash"
+      },
+      "results": [
+        {
+          "case_id": "MRO/2009/page_139.pdf-2",
+          "passed": true,
+          "predicted_answer": 267,
+          "expected_answer": 267.0,
+          "steps": 4,
+          "error": null
+        },
+        {
+          "case_id": "AAPL/2014/page_38.pdf-2",
+          "passed": true,
+          "predicted_answer": 4027,
+          "expected_answer": 4027.0,
+          "steps": 3,
+          "error": null
+        },
+        {
+          "case_id": "MRO/2006/page_33.pdf-3",
+          "passed": true,
+          "predicted_answer": 22.333333333333332,
+          "expected_answer": 22.33333,
+          "steps": 3,
+          "error": null
+        },
+        {
+          "case_id": "ETR/2015/page_131.pdf-2",
+          "passed": true,
+          "predicted_answer": 4192989,
+          "expected_answer": 4192989.0,
+          "steps": 3,
+          "error": null
+        },
+        {
+          "case_id": "AMT/2010/page_34.pdf-4",
+          "passed": true,
+          "predicted_answer": 0.19244851258581236,
+          "expected_answer": 0.19245,
+          "steps": 3,
+          "error": null
+        },
+        {
+          "case_id": "ETR/2002/page_24.pdf-3",
+          "passed": false,
+          "predicted_answer": 1.6122448979591837,
+          "expected_answer": 0.57031,
+          "steps": 3,
+          "error": null
+        },
+        {
+          "case_id": "CDNS/2012/page_30.pdf-3",
+          "passed": true,
+          "predicted_answer": 0.1078,
+          "expected_answer": 0.1078,
+          "steps": 3,
+          "error": null
+        },
+        {
+          "case_id": "HUM/2017/page_133.pdf-1",
+          "passed": true,
+          "predicted_answer": 0.6666666666666666,
+          "expected_answer": 0.66667,
+          "steps": 4,
+          "error": null
+        },
+        {
+          "case_id": "ZBH/2003/page_58.pdf-1",
+          "passed": true,
+          "predicted_answer": 1.048524844720497,
+          "expected_answer": 1.04852,
+          "steps": 3,
+          "error": null
+        },
+        {
+          "case_id": "HOLX/2012/page_113.pdf-1",
+          "passed": true,
+          "predicted_answer": 0.9989149524089567,
+          "expected_answer": 0.99891,
+          "steps": 3,
+          "error": null
+        },
+        {
+          "case_id": "IP/2007/page_75.pdf-1",
+          "passed": true,
+          "predicted_answer": 0.9348970799425562,
+          "expected_answer": 0.9349,
+          "steps": 3,
+          "error": null
+        },
+        {
+          "case_id": "APD/2013/page_36.pdf-2",
+          "passed": true,
+          "predicted_answer": 9.419282511210762,
+          "expected_answer": 9.41928,
+          "steps": 3,
+          "error": null
+        }
+      ]
+    },
+    "dev_final": {
+      "split": "dev",
+      "total": 12,
+      "correct": 12,
+      "completed": 12,
+      "custom_answer_accuracy": 1.0,
+      "freeze": {
+        "dataset_sha256": "340353ccf229db1e3a20a9aa6a98bdc0ffc0f942949b80d415557ecc63076a42",
+        "skill_fingerprint": "adb29c064f2cc3db89f0ab68095bddfb626728986e9c47fd95522ae464f769c1",
+        "case_ids": [
+          "MRO/2009/page_139.pdf-2",
+          "AAPL/2014/page_38.pdf-2",
+          "MRO/2006/page_33.pdf-3",
+          "ETR/2015/page_131.pdf-2",
+          "AMT/2010/page_34.pdf-4",
+          "ETR/2002/page_24.pdf-3",
+          "CDNS/2012/page_30.pdf-3",
+          "HUM/2017/page_133.pdf-1",
+          "ZBH/2003/page_58.pdf-1",
+          "HOLX/2012/page_113.pdf-1",
+          "IP/2007/page_75.pdf-1",
+          "APD/2013/page_36.pdf-2"
+        ],
+        "split": "dev",
+        "config": {
+          "max_steps": 14,
+          "context_chars": 60000,
+          "terminal_backend": "docker",
+          "learn_on_failure": false,
+          "max_loaded_skills": 3
+        },
+        "model": "deepseek-flash",
+        "runtime_fingerprint": "4330cf1f49822e1821df2f8d94b36d12cfe01ebd1410cb1262cdd3d0cc6a7232"
+      },
+      "results": [
+        {
+          "case_id": "MRO/2009/page_139.pdf-2",
+          "passed": true,
+          "predicted_answer": 267,
+          "expected_answer": 267.0,
+          "steps": 5,
+          "error": null
+        },
+        {
+          "case_id": "AAPL/2014/page_38.pdf-2",
+          "passed": true,
+          "predicted_answer": 4027,
+          "expected_answer": 4027.0,
+          "steps": 5,
+          "error": null
+        },
+        {
+          "case_id": "MRO/2006/page_33.pdf-3",
+          "passed": true,
+          "predicted_answer": 22.333333333333332,
+          "expected_answer": 22.33333,
+          "steps": 4,
+          "error": null
+        },
+        {
+          "case_id": "ETR/2015/page_131.pdf-2",
+          "passed": true,
+          "predicted_answer": 4192989,
+          "expected_answer": 4192989.0,
+          "steps": 5,
+          "error": null
+        },
+        {
+          "case_id": "AMT/2010/page_34.pdf-4",
+          "passed": true,
+          "predicted_answer": 0.19244851258581236,
+          "expected_answer": 0.19245,
+          "steps": 4,
+          "error": null
+        },
+        {
+          "case_id": "ETR/2002/page_24.pdf-3",
+          "passed": true,
+          "predicted_answer": 0.5703125,
+          "expected_answer": 0.57031,
+          "steps": 5,
+          "error": null
+        },
+        {
+          "case_id": "CDNS/2012/page_30.pdf-3",
+          "passed": true,
+          "predicted_answer": 0.1078,
+          "expected_answer": 0.1078,
+          "steps": 4,
+          "error": null
+        },
+        {
+          "case_id": "HUM/2017/page_133.pdf-1",
+          "passed": true,
+          "predicted_answer": 0.6666666666666666,
+          "expected_answer": 0.66667,
+          "steps": 8,
+          "error": null
+        },
+        {
+          "case_id": "ZBH/2003/page_58.pdf-1",
+          "passed": true,
+          "predicted_answer": 1.048524844720497,
+          "expected_answer": 1.04852,
+          "steps": 4,
+          "error": null
+        },
+        {
+          "case_id": "HOLX/2012/page_113.pdf-1",
+          "passed": true,
+          "predicted_answer": 0.9989149524089567,
+          "expected_answer": 0.99891,
+          "steps": 6,
+          "error": null
+        },
+        {
+          "case_id": "IP/2007/page_75.pdf-1",
+          "passed": true,
+          "predicted_answer": 0.9348970799425562,
+          "expected_answer": 0.9349,
+          "steps": 4,
+          "error": null
+        },
+        {
+          "case_id": "APD/2013/page_36.pdf-2",
+          "passed": true,
+          "predicted_answer": 9.419282511210762,
+          "expected_answer": 9.41928,
+          "steps": 4,
+          "error": null
+        }
+      ]
+    },
+    "holdout": {
+      "split": "test",
+      "total": 12,
+      "correct": 9,
+      "completed": 12,
+      "custom_answer_accuracy": 0.75,
+      "freeze": {
+        "dataset_sha256": "340353ccf229db1e3a20a9aa6a98bdc0ffc0f942949b80d415557ecc63076a42",
+        "skill_fingerprint": "adb29c064f2cc3db89f0ab68095bddfb626728986e9c47fd95522ae464f769c1",
+        "case_ids": [
+          "RSG/2018/page_135.pdf-1",
+          "VNO/2014/page_57.pdf-1",
+          "JPM/2009/page_175.pdf-4",
+          "MO/2016/page_19.pdf-2",
+          "AMAT/2018/page_33.pdf-2",
+          "BLK/2015/page_124.pdf-1",
+          "ETR/2013/page_21.pdf-1",
+          "INTC/2013/page_31.pdf-1",
+          "BLL/2012/page_31.pdf-1",
+          "AON/2018/page_87.pdf-2",
+          "CB/2010/page_83.pdf-2",
+          "CB/2008/page_229.pdf-4"
+        ],
+        "split": "test",
+        "config": {
+          "max_steps": 14,
+          "context_chars": 60000,
+          "terminal_backend": "docker",
+          "learn_on_failure": false,
+          "max_loaded_skills": 3
+        },
+        "model": "deepseek-flash",
+        "runtime_fingerprint": "4330cf1f49822e1821df2f8d94b36d12cfe01ebd1410cb1262cdd3d0cc6a7232"
+      },
+      "results": [
+        {
+          "case_id": "RSG/2018/page_135.pdf-1",
+          "passed": true,
+          "predicted_answer": 4.555555555555555,
+          "expected_answer": 4.55556,
+          "steps": 4,
+          "error": null
+        },
+        {
+          "case_id": "VNO/2014/page_57.pdf-1",
+          "passed": false,
+          "predicted_answer": 1.01,
+          "expected_answer": 101.0,
+          "steps": 4,
+          "error": null
+        },
+        {
+          "case_id": "JPM/2009/page_175.pdf-4",
+          "passed": false,
+          "predicted_answer": null,
+          "expected_answer": 290395.0,
+          "steps": 6,
+          "error": null
+        },
+        {
+          "case_id": "MO/2016/page_19.pdf-2",
+          "passed": false,
+          "predicted_answer": 0.4884191940174491,
+          "expected_answer": "yes",
+          "steps": 5,
+          "error": null
+        },
+        {
+          "case_id": "AMAT/2018/page_33.pdf-2",
+          "passed": true,
+          "predicted_answer": 0.9827,
+          "expected_answer": 0.9827,
+          "steps": 5,
+          "error": null
+        },
+        {
+          "case_id": "BLK/2015/page_124.pdf-1",
+          "passed": true,
+          "predicted_answer": 0.4655029093931837,
+          "expected_answer": 0.4655,
+          "steps": 5,
+          "error": null
+        },
+        {
+          "case_id": "ETR/2013/page_21.pdf-1",
+          "passed": true,
+          "predicted_answer": -0.09339853300733496,
+          "expected_answer": -0.0934,
+          "steps": 4,
+          "error": null
+        },
+        {
+          "case_id": "INTC/2013/page_31.pdf-1",
+          "passed": true,
+          "predicted_answer": 0.8219895287958116,
+          "expected_answer": 0.82199,
+          "steps": 4,
+          "error": null
+        },
+        {
+          "case_id": "BLL/2012/page_31.pdf-1",
+          "passed": true,
+          "predicted_answer": 1.0762,
+          "expected_answer": 1.0762,
+          "steps": 4,
+          "error": null
+        },
+        {
+          "case_id": "AON/2018/page_87.pdf-2",
+          "passed": true,
+          "predicted_answer": 2,
+          "expected_answer": 2.0,
+          "steps": 5,
+          "error": null
+        },
+        {
+          "case_id": "CB/2010/page_83.pdf-2",
+          "passed": true,
+          "predicted_answer": -0.5531914893617021,
+          "expected_answer": -0.55319,
+          "steps": 5,
+          "error": null
+        },
+        {
+          "case_id": "CB/2008/page_229.pdf-4",
+          "passed": true,
+          "predicted_answer": 10.235380116959064,
+          "expected_answer": 10.23538,
+          "steps": 5,
+          "error": null
+        }
+      ]
+    }
+  },
+  "unit_tests": {
+    "tests": 229,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1,
+    "passed": 228
+  },
+  "workflows": {
+    "workflow_final": {
+      "status": "completed",
+      "steps": 10,
+      "loaded_skills": [
+        {
+          "name": "terminal-analysis",
+          "sha256": "83d37118a99fe748a3c20e9d23e79286c561eadde9a01ecec2a0e76fc67dda1e"
+        }
+      ],
+      "context_compactions": 0,
+      "runtime_fingerprint": "d9ba5d9f6d2aced53ceef9a40a05ab43aa1a66db5d099875059004d9c263f263",
+      "intermediate_errors": 3,
+      "previous_completed_turns": 0,
+      "artifacts": [
+        {
+          "kind": "chart",
+          "filename": "aapl_ppne_2012_2014.svg",
+          "sha256": "22b673ff16973b15cf9e85ec44b025e18d215ed05baeb5a2dcc3b0e76da5e33b"
+        },
+        {
+          "kind": "report",
+          "filename": "aapl_ppne_change_report.md",
+          "sha256": "290a3796f3119b9317768f02fe3069a520a8ad9b6e092e193a4d5f8b862355de"
+        }
+      ]
+    },
+    "followup_final": {
+      "status": "completed",
+      "steps": 5,
+      "loaded_skills": [
+        {
+          "name": "financial-ratios",
+          "sha256": "c1896a4ffb66ab57bdce9743c8343a2a55309215d240b7635e92f842b727fbbe"
+        }
+      ],
+      "context_compactions": 0,
+      "runtime_fingerprint": "d9ba5d9f6d2aced53ceef9a40a05ab43aa1a66db5d099875059004d9c263f263",
+      "intermediate_errors": 2,
+      "previous_completed_turns": 1,
+      "artifacts": []
+    }
+  },
+  "skill_learning": {
+    "candidate_name": "learned-period-pair-earnings-change",
+    "candidate_sha256": "76f33aeb97d509aca1d02534fd5ceb45f1ebdb960d469e13883e4856cc1ffce4",
+    "source_split": "dev",
+    "independent_cases": 3,
+    "baseline_passed": 3,
+    "candidate_passed": 3,
+    "approved": false,
+    "reasons": [
+      "no_independent_improvement"
+    ],
+    "promotion_call_rejected": true,
+    "learned_skills_active": 0,
+    "notice": "No independent accuracy gain demonstrated. Positive promotion/rollback paths are covered by deterministic tests."
+  },
+  "budget": {
+    "ceiling_cny": "50",
+    "carried_cny": "22.8483542",
+    "new_known_cny": "1.3791136",
+    "new_reserved_cny": "0",
+    "all_committed_cny": "24.2274678",
+    "remaining_cny": "25.7725322",
+    "halted": false,
+    "calls_sent": 212,
+    "call_states": {
+      "settled": 212
+    },
+    "rates": {
+      "input_miss_cny_per_million": "2",
+      "input_hit_cny_per_million": "0.04",
+      "output_cny_per_million": "8",
+      "checked_at": "2026-10-10",
+      "label": "configured conservative rates; not a supplier invoice"
+    },
+    "account_bill_exact": false
+  },
+  "release_runtime_fingerprint": "d9ba5d9f6d2aced53ceef9a40a05ab43aa1a66db5d099875059004d9c263f263",
+  "frozen_evaluation_wheel_sha256": "2878788b905b51af6c7faa2132b142eeb7716109efe4a28a5aa7d16b555bcaff",
+  "post_evaluation_changes": [
+    "reject whitespace-only answers",
+    "verify host labels before any paid case call"
+  ],
+  "offline_output_revalidation": [
+    {
+      "case_id": "MRO/2009/page_139.pdf-2",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "AAPL/2014/page_38.pdf-2",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "MRO/2006/page_33.pdf-3",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "ETR/2015/page_131.pdf-2",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "AMT/2010/page_34.pdf-4",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "ETR/2002/page_24.pdf-3",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "CDNS/2012/page_30.pdf-3",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "HUM/2017/page_133.pdf-1",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "ZBH/2003/page_58.pdf-1",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "HOLX/2012/page_113.pdf-1",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "IP/2007/page_75.pdf-1",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "APD/2013/page_36.pdf-2",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "RSG/2018/page_135.pdf-1",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "VNO/2014/page_57.pdf-1",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "JPM/2009/page_175.pdf-4",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "MO/2016/page_19.pdf-2",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "AMAT/2018/page_33.pdf-2",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "BLK/2015/page_124.pdf-1",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "ETR/2013/page_21.pdf-1",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "INTC/2013/page_31.pdf-1",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "BLL/2012/page_31.pdf-1",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "AON/2018/page_87.pdf-2",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "CB/2010/page_83.pdf-2",
+      "final_validation_passed": true
+    },
+    {
+      "case_id": "CB/2008/page_229.pdf-4",
+      "final_validation_passed": true
+    }
+  ],
+  "limitations": [
+    "Small sample; no claim of general benchmark superiority",
+    "No commercial market-data or live trading test",
+    "MCP protocol tested with local fixture",
+    "One invalid initial skill proposal counted in budget; repaired proposal path now audited"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "id": "synthetic-company-annual-example",
+  "question": "What is the revenue growth rate from 2024 to 2025?",
+  "pre_text": ["This is a synthetic demonstration, not actual company data. Amounts in millions of CNY."],
+  "post_text": ["Revenue and operating costs use the same accounting scope in both years."],
+  "table": [["Metric", "2025", "2024"], ["Revenue", "120", "100"], ["Operating costs", "75", "70"]]
+}

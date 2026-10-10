@@ -1,0 +1,3 @@
+# Keep audited runtime and skill bytes identical across Windows/Linux checkouts.
+# Runtime fingerprints intentionally hash the exact installed source files.
+* -text

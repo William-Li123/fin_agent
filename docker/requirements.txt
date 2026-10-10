@@ -1,0 +1,7 @@
+# Optional analysis dependencies inside the terminal Docker image.
+# No model SDK or credentials are needed by the worker.
+pandas>=2.2,<4
+pypdf>=5,<7
+openpyxl>=3.1,<4
+matplotlib>=3.9,<4
+requests>=2.32,<3

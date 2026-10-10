@@ -1,0 +1,22 @@
+{
+  "id": "report-75855700cf324d36b6135b4ee57a9278",
+  "created_at": "2026-10-10T09:52:25.285779+00:00",
+  "candidate_id": "candidate-32a028bbdfe4433aa9e942dc74a0bbe7",
+  "candidate_sha256": "76f33aeb97d509aca1d02534fd5ceb45f1ebdb960d469e13883e4856cc1ffce4",
+  "candidate_record_sha256": "eaab1ab859bd33e7d47e37e743c341a5dcac2d677492195aca6daf1581f8592b",
+  "source_experience_id": "exp-3f2004dab6ac40659229fe76d16faa51",
+  "source_experience_sha256": "4ffd8e483f9c70a17527499bb0db278fcc9d1d32d59b1c4bb831365a38d61526",
+  "registry_fingerprint": "adb29c064f2cc3db89f0ab68095bddfb626728986e9c47fd95522ae464f769c1",
+  "case_count": 3,
+  "independent_source_groups": 3,
+  "improvements": 0,
+  "regressions": 0,
+  "evaluation_errors": 0,
+  "approved": false,
+  "reasons": [
+    "no_independent_improvement"
+  ],
+  "policy": "paired-development-v1: at-least-three-distinct-source-groups; no-regressions; positive-gain; no-errors",
+  "report_sha256": "1d28e0fdd04a05c4d447d2bf1504a254fd7a203a41a50b6f25f39cd7e8a523ee",
+  "record_sha256": "d360fe5eb480d3ccab390bc9c08b1818a73a3c63dbfe2750a84922b82c1e7189"
+}
