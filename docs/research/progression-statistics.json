@@ -1,0 +1,567 @@
+{
+  "kind": "offline_exploratory_progression_analysis",
+  "new_model_calls": 0,
+  "source_hashes": {
+    "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\data\\finance\\final_20261010\\host\\manifest.json": "9b9b5693eac2cb5b8af3ffb48c955a8a92755f7bd54851979962ef8ab31a1364",
+    "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\paired_baseline_20261010\\offline_fairness_audit.json": "c798fb3e17d76aee3eb856ff83f05950066f3e76ac6bd0cc41657b67a7e1c7a8",
+    "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\results.json": "2cb22c8e925fba1a2c9e343aacff73e717624b6d14f5ad0afbe8e96709dfe2e1",
+    "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\campaign.json": "99bd9b9d517c0f1e8fb6fb89a9a829c7e6018a2bfbe44d3f179f576d29993170",
+    "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\paired_baseline_20261010\\experiment.json": "eff436a8823b8d17c2d938a1176ffa747327db7bacd41377c52b574f661f498b",
+    "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\report.json": "11c435c5b3cb336fdaff7a57ef5a8abcbe8331a6689ce17ea62d62bc8875b753"
+  },
+  "normalized_all_input_cache_miss_cost": {
+    "rates": "CNY 2/million input and 8/million output",
+    "v1_cny": "4.307414",
+    "v2_cny": "4.682632",
+    "relative_change": "0.087109806487140544187301244",
+    "v1_input_tokens": 1847443,
+    "v1_output_tokens": 76566,
+    "v2_input_tokens": 2263652,
+    "v2_output_tokens": 19416,
+    "v1_model_calls": 329
+  },
+  "metrics": {
+    "baseline_raw_scalar": {
+      "correct": 13,
+      "total": 50,
+      "accuracy": 0.26,
+      "case_independent_wilson_95_interval": [
+        0.15871527493552393,
+        0.39553157264848837
+      ]
+    },
+    "baseline_posthoc_executed_program": {
+      "correct": 29,
+      "total": 50,
+      "accuracy": 0.58,
+      "case_independent_wilson_95_interval": [
+        0.4423344176857823,
+        0.7062499664528802
+      ]
+    },
+    "financial_v1_scalar": {
+      "correct": 35,
+      "total": 50,
+      "accuracy": 0.7,
+      "case_independent_wilson_95_interval": [
+        0.562496495355466,
+        0.8089644649911906
+      ]
+    },
+    "financial_v2_scalar": {
+      "correct": 42,
+      "total": 50,
+      "accuracy": 0.84,
+      "case_independent_wilson_95_interval": [
+        0.7148578393696501,
+        0.916625793219666
+      ]
+    }
+  },
+  "paired": {
+    "baseline_raw_to_v1": {
+      "gains": 24,
+      "losses": 2,
+      "both_correct": 11,
+      "both_wrong": 13,
+      "difference": 0.44,
+      "case_independent_exact_mcnemar_p_two_sided": 1.049041748046875e-05,
+      "company_year_cluster_bootstrap_95_percentile_interval": [
+        0.28,
+        0.6037735849056604
+      ],
+      "bootstrap_groups": 46,
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 20261010,
+      "caution": "Descriptive exploratory statistics for a reused cohort. Case independence is violated by repeated source groups; neither test proves architecture causality."
+    },
+    "baseline_posthoc_program_to_v1": {
+      "gains": 10,
+      "losses": 4,
+      "both_correct": 25,
+      "both_wrong": 11,
+      "difference": 0.12,
+      "case_independent_exact_mcnemar_p_two_sided": 0.1795654296875,
+      "company_year_cluster_bootstrap_95_percentile_interval": [
+        -0.02040816326530612,
+        0.2653061224489796
+      ],
+      "bootstrap_groups": 46,
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 20261010,
+      "caution": "Descriptive exploratory statistics for a reused cohort. Case independence is violated by repeated source groups; neither test proves architecture causality."
+    },
+    "v1_to_v2": {
+      "gains": 8,
+      "losses": 1,
+      "both_correct": 34,
+      "both_wrong": 7,
+      "difference": 0.14,
+      "case_independent_exact_mcnemar_p_two_sided": 0.0390625,
+      "company_year_cluster_bootstrap_95_percentile_interval": [
+        0.03773584905660377,
+        0.2553191489361702
+      ],
+      "bootstrap_groups": 46,
+      "bootstrap_repetitions": 20000,
+      "bootstrap_seed": 20261010,
+      "caution": "Descriptive exploratory statistics for a reused cohort. Case independence is violated by repeated source groups; neither test proves architecture causality."
+    }
+  },
+  "case_scores": [
+    {
+      "case_id": "AAL/2013/page_18.pdf-1",
+      "source_group": "AAL/2013",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "AAPL/2006/page_131.pdf-1",
+      "source_group": "AAPL/2006",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "ABMD/2006/page_43.pdf-1",
+      "source_group": "ABMD/2006",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "AMT/2016/page_49.pdf-1",
+      "source_group": "AMT/2016",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "AON/2007/page_188.pdf-3",
+      "source_group": "AON/2007",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "BLL/2011/page_32.pdf-2",
+      "source_group": "BLL/2011",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "C/2009/page_243.pdf-2",
+      "source_group": "C/2009",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "CDW/2015/page_93.pdf-2",
+      "source_group": "CDW/2015",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": false
+    },
+    {
+      "case_id": "CMCSA/2015/page_67.pdf-1",
+      "source_group": "CMCSA/2015",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "DVN/2012/page_77.pdf-1",
+      "source_group": "DVN/2012",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": false
+    },
+    {
+      "case_id": "ETR/2004/page_212.pdf-3",
+      "source_group": "ETR/2004",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "ETR/2016/page_374.pdf-4",
+      "source_group": "ETR/2016",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "GIS/2017/page_31.pdf-1",
+      "source_group": "GIS/2017",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "GIS/2018/page_110.pdf-2",
+      "source_group": "GIS/2018",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": false
+    },
+    {
+      "case_id": "GIS/2018/page_110.pdf-3",
+      "source_group": "GIS/2018",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "GIS/2019/page_68.pdf-2",
+      "source_group": "GIS/2019",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "GPN/2008/page_78.pdf-1",
+      "source_group": "GPN/2008",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": false
+    },
+    {
+      "case_id": "GPN/2010/page_89.pdf-4",
+      "source_group": "GPN/2010",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": false
+    },
+    {
+      "case_id": "GPN/2018/page_94.pdf-2",
+      "source_group": "GPN/2018",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "GS/2013/page_126.pdf-2",
+      "source_group": "GS/2013",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "GS/2015/page_188.pdf-1",
+      "source_group": "GS/2015",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "GS/2018/page_78.pdf-3",
+      "source_group": "GS/2018",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "HOLX/2007/page_93.pdf-2",
+      "source_group": "HOLX/2007",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "ILMN/2008/page_86.pdf-3",
+      "source_group": "ILMN/2008",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "JPM/2014/page_70.pdf-2",
+      "source_group": "JPM/2014",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "JPM/2015/page_137.pdf-2",
+      "source_group": "JPM/2015",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "KHC/2018/page_132.pdf-2",
+      "source_group": "KHC/2018",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": false
+    },
+    {
+      "case_id": "LMT/2014/page_50.pdf-3",
+      "source_group": "LMT/2014",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "LMT/2014/page_91.pdf-1",
+      "source_group": "LMT/2014",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "MMM/2007/page_23.pdf-1",
+      "source_group": "MMM/2007",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "MMM/2013/page_75.pdf-1",
+      "source_group": "MMM/2013",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "MMM/2015/page_93.pdf-2",
+      "source_group": "MMM/2015",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "MRK/2013/page_3.pdf-2",
+      "source_group": "MRK/2013",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "MRO/2013/page_39.pdf-3",
+      "source_group": "MRO/2013",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "MS/2013/page_132.pdf-1",
+      "source_group": "MS/2013",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "NCLH/2018/page_97.pdf-2",
+      "source_group": "NCLH/2018",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "PNC/2008/page_122.pdf-1",
+      "source_group": "PNC/2008",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "PNC/2012/page_68.pdf-2",
+      "source_group": "PNC/2012",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "PPG/2006/page_42.pdf-3",
+      "source_group": "PPG/2006",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "PPG/2012/page_29.pdf-2",
+      "source_group": "PPG/2012",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "RCL/2016/page_6.pdf-1",
+      "source_group": "RCL/2016",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "RSG/2015/page_98.pdf-2",
+      "source_group": "RSG/2015",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "SNA/2012/page_110.pdf-1",
+      "source_group": "SNA/2012",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": false
+    },
+    {
+      "case_id": "SNA/2012/page_110.pdf-3",
+      "source_group": "SNA/2012",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": false
+    },
+    {
+      "case_id": "STT/2014/page_54.pdf-2",
+      "source_group": "STT/2014",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "TMUS/2017/page_29.pdf-1",
+      "source_group": "TMUS/2017",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "TMUS/2017/page_29.pdf-4",
+      "source_group": "TMUS/2017",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "UNP/2007/page_25.pdf-2",
+      "source_group": "UNP/2007",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": true,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "UNP/2016/page_52.pdf-3",
+      "source_group": "UNP/2016",
+      "baseline_raw_scalar": false,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": false,
+      "financial_v2_scalar": true
+    },
+    {
+      "case_id": "UPS/2007/page_49.pdf-1",
+      "source_group": "UPS/2007",
+      "baseline_raw_scalar": true,
+      "baseline_posthoc_executed_program": false,
+      "financial_v1_scalar": true,
+      "financial_v2_scalar": true
+    }
+  ],
+  "settings": {
+    "baseline": {
+      "mode": "paid_model_evaluation",
+      "model_calls": 50,
+      "paid_api_cost_cny": null,
+      "manifest": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\data\\finance\\final_20261010\\host\\manifest.json",
+      "manifest_sha256": "9b9b5693eac2cb5b8af3ffb48c955a8a92755f7bd54851979962ef8ab31a1364",
+      "dataset_revision": "0f16e2867befa6840783e58be38c9efb9229d742",
+      "split": "test",
+      "cases": 50,
+      "configurations": [
+        "baseline"
+      ],
+      "repeats": 1,
+      "execution_mode": "tools",
+      "planned_runs": 50,
+      "model": "deepseek-flash",
+      "thinking": "disabled",
+      "reasoning_effort": "low",
+      "max_model_calls_per_agent_run": 1,
+      "max_output_tokens_per_call": 2048,
+      "total_budget_cny": "2",
+      "accounted_cost_cny": "0.154202",
+      "unsettled_reservation_cny": "0",
+      "halt_reason": null,
+      "account_bill_exact": false,
+      "output_dir": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\paired_baseline_20261010"
+    },
+    "v1": {
+      "model": "deepseek-flash",
+      "thinking": "disabled",
+      "temperature": 0,
+      "max_output_tokens": 2048,
+      "max_model_calls": 12,
+      "max_prompt_chars": 48000,
+      "mode": "terminal",
+      "backend": "docker",
+      "terminal_timeout_seconds": 60,
+      "per_attempt_cny": "1.5"
+    },
+    "v2": {
+      "max_steps": 14,
+      "context_chars": 60000,
+      "terminal_backend": "docker",
+      "learn_on_failure": false,
+      "max_loaded_skills": 3
+    }
+  },
+  "cautions": [
+    "Original unmodified my_agent has no comparable financial score",
+    "Raw scalar and executed-program metrics are different; baseline has two explicit views",
+    "Posthoc baseline execution is not an additional paid model experiment",
+    "All confidence intervals describe the historical sample, not unseen production finance tasks"
+  ]
+}

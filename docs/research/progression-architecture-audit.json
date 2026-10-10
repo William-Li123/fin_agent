@@ -1,0 +1,516 @@
+{
+  "schema": "progression-architecture-audit-v1",
+  "created_at": "2026-10-10T11:08:21.081216+00:00",
+  "scope": "Read-only architecture/realized-use audit; no API calls, no source changes, no production ledger changes.",
+  "roots": {
+    "new": "F:\\scientific paper\\finance-research-agent",
+    "old_financial_agent": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent"
+  },
+  "historical_source_check": "Current old profile/context/tools/runner/agent graph/nodes are byte-identical to final_holdout_20261010/frozen_source counterparts.",
+  "research_question": "基线→旧my_agent金融适配→新版独立金融Agent的工程机制及归因边界",
+  "three_systems": [
+    {
+      "system": "direct baseline",
+      "flow": "净化财报全文 → 一次模型输出answer/program/explanation/sources → 宿主评分",
+      "key_constraint": "旧基线仍承担FinQA DSL输出契约；没有工具修复、检索、上下文回读或技能",
+      "reference": {
+        "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\runner.py",
+        "line": 281,
+        "note": "one-shot baseline"
+      }
+    },
+    {
+      "system": "my_agent finance adapter",
+      "flow": "原LangGraph planner → executor ↔ terminal Python/financial SDK → finish draft → finalizer → FinQA DSL与来源检查",
+      "key_constraint": "通用原型外加较厚金融profile和上下文适配，有tools/code/terminal三条入口模式",
+      "reference": {
+        "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\profile.py",
+        "line": 430,
+        "note": "finance adapter construction"
+      }
+    },
+    {
+      "system": "finance-research-agent",
+      "flow": "单循环 → skill/tool/context_read → finish → 宿主来源与数值回执校验 → scoped memory",
+      "key_constraint": "所有CLI/评测/候选技能验证共享一个ResearchAgent运行主路径；终端是可选工具",
+      "reference": {
+        "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\agent.py",
+        "line": 49,
+        "note": "shared agent"
+      }
+    }
+  ],
+  "same50_realized": {
+    "report": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\report.json",
+    "old_correct": 35,
+    "new_correct": 42,
+    "new_engineering_failures": 0,
+    "new_insufficient_evidence": 2,
+    "new_model_calls": 258,
+    "old_model_calls": 329,
+    "new_actions": {
+      "skill": 50,
+      "tool": 143,
+      "finish": 50,
+      "invalid_response": 15
+    },
+    "new_tools": {
+      "finance_read_table": 50,
+      "finance_calculate": 48,
+      "finance_read_document": 14,
+      "finance_search_evidence": 17,
+      "context_read": 14
+    },
+    "old_model_stages": {
+      "planner": 50,
+      "executor": 229,
+      "finalizer": 50
+    },
+    "old_terminal_python_calls": 172,
+    "old_sdk_calls": {
+      "list_documents": 96,
+      "read_table": 50,
+      "search_evidence": 51,
+      "calculate": 45
+    },
+    "new_skills_loaded": {
+      "financial-ratios": 50
+    },
+    "prior_memory_completed_turns": {
+      "0": 50
+    },
+    "context_recall_calls": 14,
+    "context_recall_cases": 4,
+    "context_compaction_message_builds": 26,
+    "context_compaction_cases": 4,
+    "new_tool_and_validation_errors": {
+      "mandatory_skill_gate": 15,
+      "table_range_or_column": 3
+    },
+    "usage_old": {
+      "prompt_tokens": 1847443,
+      "completion_tokens": 76566,
+      "prompt_cache_hit_tokens": 278656,
+      "prompt_cache_miss_tokens": 1568787
+    },
+    "usage_new": {
+      "completion_tokens": 19416,
+      "prompt_cache_hit_tokens": 1557504,
+      "prompt_cache_miss_tokens": 706148,
+      "prompt_tokens": 2263652,
+      "total_tokens": 2283068
+    },
+    "not_exercised": [
+      "跨题/多轮记忆检索：50题各自新session，先前completed_turns均0",
+      "Docker/Python/Shell执行：finance_terminal调用0",
+      "MCP/商业数据服务：调用0",
+      "自动失败技能学习：learn_on_failure=false",
+      "学得技能：只加载内置financial-ratios",
+      "图表/报告生成：render_chart/write_report调用0"
+    ]
+  },
+  "mechanisms": [
+    {
+      "id": "single_control_loop",
+      "finding": "新版用一个有界模型→动作→校验循环替代 planner/executor/finalizer 三阶段图；每个响应只选 skill/tool/finish。独立规划和二次finalizer调用被移除，程序格式从FinQA DSL转为宿主计算回执引用。",
+      "realized_evidence": "旧329次=planner50+executor229+finalizer50；新258次=skill50+tool143+finish50+invalid15。新版实测没有Python代码生成。",
+      "attribution_limit": "这是整个控制流程和输出契约变化；并非证明LangGraph本身降低准确率，也不是只改变一个模块的消融。旧最大模型调用12，新最大步骤14。",
+      "references": [
+        {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\agent\\graph.py",
+          "line": 11,
+          "note": "planner/executor/tool/finalizer graph"
+        },
+        {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\agent\\nodes.py",
+          "line": 47,
+          "note": "planner makes an independent model call"
+        },
+        {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\agent\\nodes.py",
+          "line": 249,
+          "note": "finalizer makes an independent model call"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\agent.py",
+          "line": 107,
+          "note": "single model-action loop"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\validation.py",
+          "line": 50,
+          "note": "receipt-linked final value"
+        }
+      ]
+    },
+    {
+      "id": "typed_tools_instead_of_code_for_simple_questions",
+      "finding": "新版同时暴露金融专用工具与终端，优先直接读取和计算；旧本50模式只注册finance_terminal，模型需为读取与计算写Python。新版把文档目录直接放入系统上下文，减少目录发现。",
+      "realized_evidence": "旧172次python终端调用，SDK list_documents96/read_table50/search_evidence51/calculate45；新finance_read_table50/read_document14/search_evidence17/calculate48，terminal和list_documents均0。",
+      "attribution_limit": "降低Python语法、JSON代码转义、循环和结果包装的生成自由度是代码机制推断，准确率净增不能仅归因于此。终端仍在能力目录中，只是本50未选用。",
+      "references": [
+        {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\profile.py",
+          "line": 435,
+          "note": "tools/code/terminal modes are mutually selected"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\tools\\workspace.py",
+          "line": 103,
+          "note": "direct financial tools plus terminal registered"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\agent.py",
+          "line": 100,
+          "note": "document catalog and tools inserted once per prompt construction"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\tools\\tools.py",
+          "line": 379,
+          "note": "bounded full-document reader"
+        }
+      ]
+    },
+    {
+      "id": "procedural_skill_loading",
+      "finding": "技能先元数据发现，模型选择后正文进入上下文。金融计算与最终回答前有加载门槛。",
+      "realized_evidence": "50题全部只加载financial-ratios一次；其内容覆盖分子分母、期间、来源、单位、比例/百分比、平均值。15次模型响应被先加载技能的门槛拒绝，消耗额外调用。",
+      "attribution_limit": "能证实技能正文被使用，不能证实技能贡献了多少分；没有no-skill对照，其他5个内置技能与自动生成技能没有在这50题中被使用。",
+      "references": [
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\skills\\registry.py",
+          "line": 163,
+          "note": "metadata-only catalog"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\skills\\registry.py",
+          "line": 171,
+          "note": "body loading"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\agent.py",
+          "line": 118,
+          "note": "finish gate"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\agent.py",
+          "line": 146,
+          "note": "calculation/terminal gate"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\skills\\builtin\\financial-ratios\\SKILL.md",
+          "line": 10,
+          "note": "procedural body"
+        }
+      ]
+    },
+    {
+      "id": "recoverable_context",
+      "finding": "新版保存完整事件归档；可见上下文去掉ToolResult.content与structured_content重复；过长观察返回带incomplete标志的摘录和archive入口；context_read可分页回读。上下文装不下时丢弃较早完整事件并保留索引。",
+      "realized_evidence": "本50调用context_read14次，分布4题；context_compactions计数26，分布4题。这个计数是重建消息时发生历史归档的次数，不是26个独立题目；单观察超长投影不计入该计数。",
+      "attribution_limit": "新版默认60000字符，旧实测48000字符，两个都用16000字符观察限额；容量和检索路径同时变化。上下文恢复能力有实际使用证据，准确率净增仍需等容量消融。",
+      "references": [
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\context.py",
+          "line": 19,
+          "note": "full event archive"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\context.py",
+          "line": 25,
+          "note": "bounded recall"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\context.py",
+          "line": 34,
+          "note": "deduplicated observation projection and incomplete excerpt"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\context.py",
+          "line": 59,
+          "note": "retain recent events and archive older events"
+        },
+        {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\context.py",
+          "line": 95,
+          "note": "old exact-provenance projection may raise"
+        },
+        {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\context.py",
+          "line": 178,
+          "note": "readonly fallback uses key-name heuristic"
+        }
+      ]
+    },
+    {
+      "id": "host_receipt_boundary",
+      "finding": "来源只能由成功宿主读取建立；数值结论必须绑定已观察计算回执，答案与回执数值在容差内一致，引用覆盖计算所用来源。终端任意stdout/emit不能伪造这个宿主集合。",
+      "realized_evidence": "本50有48次finance_calculate，48个answered数值结论；2题insufficient_evidence。宿主工具严格回执机制被用到；终端伪造防护仅在其他工程测试验证，本50没有终端调用。",
+      "attribution_limit": "保证数值来自某次受控算术和来源ID确被读取；不证明表达式操作数来自所引单元格，不验证分子分母语义、期间或单位正确。",
+      "references": [
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\tools\\workspace.py",
+          "line": 129,
+          "note": "evidence references must already be observed"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\tools\\workspace.py",
+          "line": 138,
+          "note": "only trusted host results update ledgers"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\tools\\workspace.py",
+          "line": 147,
+          "note": "successful terminal SDK object receipts; no recursive stdout trust"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\validation.py",
+          "line": 50,
+          "note": "calculation ID, source coverage and answer consistency"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\tools\\tools.py",
+          "line": 303,
+          "note": "independent expression and evidence_ids arguments"
+        }
+      ]
+    },
+    {
+      "id": "modular_repository",
+      "finding": "新版把单主循环、上下文、输出校验、模型预算、工具、记忆、技能、学习与评测放在src/finagent独立模块；旧财务profile承担阶段校验、源范围规则、重复读取控制、格式修复、prompt适配和Agent工厂。",
+      "realized_evidence": "新版运行无需LangGraph/LangSmith，主依赖openai/anyio/pydantic；旧已存在的Decimal金融工具、Docker终端、SQLite记忆、MCP代理被迁移而非重造。",
+      "attribution_limit": "代码行数只是范围描述。新版移除了AST受限代码后端和DSL最终输出流程，也新增技能学习；两者并非功能逐项完全等价。",
+      "references": [
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\pyproject.toml",
+          "line": 1,
+          "note": "package boundaries and dependencies"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\agent.py",
+          "line": 49,
+          "note": "one shared agent path"
+        },
+        {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\profile.py",
+          "line": 54,
+          "note": "domain-specific final checks"
+        },
+        {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\profile.py",
+          "line": 301,
+          "note": "format retry/provider adapter"
+        },
+        {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\profile.py",
+          "line": 430,
+          "note": "profile factory with three execution modes"
+        }
+      ]
+    }
+  ],
+  "context_case_study": {
+    "case_id": "RSG/2015/page_98.pdf-2",
+    "old_result": "第三次模型请求之后，第二个终端读取结果触发ContextBudgetError；尚未开始后续模型调用。",
+    "old_details": "该终端成功执行list_documents、read_table及2次search；emit合计约17408 JSON字符、39个observed IDs。search包装键result被has_computed_value视为计算结果，纯只读fallback未生效。",
+    "new_result": "5步：加载技能、范围表格读取、单次检索、宿主计算100.3/46.7、最终答案；2.147751605995717正确。该题没有context_read，也未触发>16000观察投影。",
+    "interpretation": "能指出旧异常的具体实现条件与新版更窄读取路径；不能说同题凭分页回读得到修复或将14个百分点都归因于context。",
+    "references": [
+      {
+        "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\context.py",
+        "line": 178,
+        "note": "result key incorrectly classifies retrieval wrapper"
+      },
+      {
+        "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\042_ee9f78029e1f\\tool_trace.jsonl",
+        "line": 2,
+        "note": "pure retrieval execution with result-wrapped search"
+      },
+      {
+        "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_041\\trace.json",
+        "line": 1,
+        "note": "new five-step successful trace"
+      }
+    ]
+  },
+  "output_contract_case_study": {
+    "case_id": "UNP/2016/page_52.pdf-3",
+    "old_result": "FinanceOutputError: Program must be a numeric arithmetic expression",
+    "new_result": "5步后宿主计算(2440+3237+4127)/(19941+21813+23988)=0.1491284110614219，正确；无需再生成FinQA DSL。",
+    "interpretation": "较简单的输出契约消除了一类失败机会；它也意味着两个系统没有相同的program输出能力/评测约束。"
+  },
+  "complexity_inventory": {
+    "method": "Physical lines and .py files, includes __init__.py, excludes _vendor and test_*.py; not a maintainability score.",
+    "new": {
+      "all_python": {
+        "files": 39,
+        "physical_lines": 4899
+      },
+      "core": {
+        "files": 4,
+        "physical_lines": 345
+      },
+      "tools": {
+        "files": 17,
+        "physical_lines": 2403
+      },
+      "learning": {
+        "files": 2,
+        "physical_lines": 425
+      },
+      "skills": {
+        "files": 2,
+        "physical_lines": 268
+      },
+      "memory": {
+        "files": 2,
+        "physical_lines": 437
+      }
+    },
+    "old_finance": {
+      "files": 24,
+      "physical_lines": 5793
+    },
+    "old_agent_framework": {
+      "files": 10,
+      "physical_lines": 1076
+    },
+    "qualification": "范围不完全等价，不含旧通用tools/llm/observability与根CLI，也不含新tests/docs/SKILL.md。新总量减少不能单独证明架构或算法更好。"
+  },
+  "explicit_limitations": [
+    {
+      "id": "arithmetic_not_semantics",
+      "detail": "validate_final检查已读source IDs、成功calculation_id、value数值一致与来源覆盖。calculate没有每个operand→evidence_id→source_text转换的结构化绑定，常量表达式999引用任意已读来源也能通过。离线内存演示safe_calculate(\"999\")加同值回执被validate_final接受，未调用API或写入运行结果。该演示是契约边界，不是新的真实题成绩。",
+      "references": [
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\validation.py",
+          "line": 19,
+          "note": "validation contract"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\validation.py",
+          "line": 65,
+          "note": "abs 1e-5 or relative 1e-6 tolerance"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\tools\\tools.py",
+          "line": 303,
+          "note": "semantic relationship not validated"
+        }
+      ]
+    },
+    {
+      "id": "remaining_real_semantic_errors",
+      "detail": "48个数值answered中6个仍错误；另2题明确insufficient_evidence。错误包括DVN回答比率0.107167而期望金额150，SNA一题回答相对变化-0.280057而期望差額-905。它们拥有合法计算回执，直接反证回执等于语义正确。",
+      "reference": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\report.json"
+    },
+    {
+      "id": "output_contract_confound",
+      "detail": "旧版本额外要求输出并执行FinQA DSL程序，且schema/answer-program一致性失败可能记为工程失败；新只要求标量答案与计算回执，new_program_accuracy=null。标量准确率对比可以描述成品行为，不应称两版官方program accuracy的提升。"
+    },
+    {
+      "id": "context_recovery_limits",
+      "detail": "新版不是provider精确tokenizer预算，而是字符限额。recall分页是原始JSON字符窗口，可截断字段，需要后续窗口拼接；完整archive保留原始ToolResult重复字段，回读有额外开销。系统/问题/记忆/技能固定块过长仍会直接失败。",
+      "references": [
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\context.py",
+          "line": 25,
+          "note": "character-window recall"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\context.py",
+          "line": 54,
+          "note": "fixed context can still overflow"
+        }
+      ]
+    },
+    {
+      "id": "skill_gate_and_instruction_conflict",
+      "detail": "强制加载技能引发15次可恢复拒绝。本50全选同一技能，不支持广泛技能路由可靠性的结论。financial-ratios要求按问题所需百分比输出，benchmark note又要求原始ratio；需要明确评价适配层的优先级，避免研究输出和benchmark约定混淆。"
+    },
+    {
+      "id": "test_scope_limits",
+      "detail": "复用历史50题、46个来源组；不是新独立holdout。新验收集与本50无重复case/source_group，但开发者已看过旧同50结果。无本轮test学习/调优不等于历史开发未接触这些分布。"
+    },
+    {
+      "id": "cost_cache_confound",
+      "detail": "新输入token比旧更多，却费用更低；缓存命中和输出长度共同影响，不能把费用下降全归因于上下文压缩。为公平比较应同时报告真实计费、全部输入按未命中费率归一化成本、总输出token与调用数。"
+    },
+    {
+      "id": "skills_learning_scope",
+      "detail": "学习支持失败记录→模型候选→隔离→至少3个不同来源组的dev双臂验证→无退步且至少1进步→晋升，并排除原失败题/来源组；这些是工程闭环，小样本门槛不等于统计显著或全面泛化。当前同50禁用学习，不能贡献本50得分。",
+      "references": [
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\learning\\service.py",
+          "line": 91,
+          "note": "development-only failure record"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\learning\\service.py",
+          "line": 198,
+          "note": "metered candidate proposal"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\learning\\service.py",
+          "line": 313,
+          "note": "paired independent validation"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\learning\\service.py",
+          "line": 366,
+          "note": "promotion threshold"
+        },
+        {
+          "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\learning\\service.py",
+          "line": 400,
+          "note": "promotion verification"
+        }
+      ]
+    }
+  ],
+  "minimal_ablation_plan": [
+    {
+      "priority": 0,
+      "name": "离线统一评分与上下文回放",
+      "intervention": "先用相同五位小数数值/yes-no评分重评现有raw预测，分别列schema、算术一致性、语义答错；把旧RSG超长观察回放给两个context构造器，固定48000字符与16000观察限额。",
+      "question_answered": "区分协议失败、上下文实现异常与数值推理错误；测恢复接口是否产生可取回归档。",
+      "fairness": "不增加API调用。回放能验证接口/失败行为，不产生新的模型准确率或证明能够从归档答对。"
+    },
+    {
+      "priority": 1,
+      "name": "完整新版 vs 一致关闭技能",
+      "intervention": "在独立dev/新来源组配对运行，去掉skill catalog/skill正文注入与必须加载的system语句及计算/finish门槛，保留相同工具、上下文、回执和评分；必须作为冻结的新实验臂。",
+      "question_answered": "技能整套机制相对无技能的净效用，包括程序知识、额外加载调用和门槛带来的成本。",
+      "fairness": "仅删除SKILL.md而保留必须加载检查会故意制造失败，不公平。这个完整模块消融仍不能把技能正文知识与额外步骤成本分开；如需分开，应增加两臂都预加载、只有正文有无差异的内容实验。"
+    },
+    {
+      "priority": 2,
+      "name": "按需技能 vs 内联同一技能正文",
+      "intervention": "将相同financial-ratios正文直接放入初始固定上下文，标记已加载且去掉需要额外skill action的提示；其他工具、校验、预算、正文完全相同。",
+      "question_answered": "按需加载在当前单一技能数值题上是否值得一个模型调用，还是主要增加门槛和上下文重复。",
+      "fairness": "这比较加载方式，不是去技能。只有同一正文/版本和一致门槛状态才公平。真实路由价值另用覆盖多技能的任务集验证。"
+    },
+    {
+      "priority": 3,
+      "name": "归档恢复 vs 同容量内联最近历史",
+      "intervention": "固定相同max_chars/observation_chars、同样结构化去重，再分别允许context_read归档恢复或只保留可容纳的最近原始观察。预注册哪些题会触发大观察。",
+      "question_answered": "回读通道对长上下文题的收益。",
+      "fairness": "不能把无界全文与60000字符归档臂比较然后归因压缩。若“inline context”指一开始给全报告，则是检索策略消融，需要相同来源ID和可信来源绑定，仅回答目录发现/分步检索是否必要。"
+    },
+    {
+      "priority": 4,
+      "name": "匹配输出契约的一次性基线",
+      "intervention": "同模型/temperature/thinking，给相同净化文档与benchmark比例约定；一次请求输出标量、解释和来源位置，不强加新Agent专有calculation_id或旧DSL；使用相同答案评分。另独立报告模型表达式离线执行的程序基线。",
+      "question_answered": "单请求端到端回答的便宜基线与完整Agent的成品差异。",
+      "fairness": "一次调用和多步Agent不是等推理预算。不能要求baseline生成不存在的宿主calculation_id，也不能只给baseline施加DSL格式失败。"
+    },
+    {
+      "priority": 5,
+      "name": "等预算文本推理对照",
+      "intervention": "增加无工具的有界多轮读文档/自检对照，和Agent使用相同模型、输出上限、每题调用上限及预注册累计token预算；不使用gold挑选多个答案。",
+      "question_answered": "在相近推理开销下，宿主金融工具及交互反馈是否仍带来收益。",
+      "fairness": "仅限制总人民币或全队列费用不充分：缓存命中不同、早题消耗会改变后题机会。采用每题限制，计入所有加载/修复/失败调用，同时报告缓存归一化费用；随机或交替运行臂顺序。"
+    }
+  ],
+  "execution_recommendation": "先做零API的统一重评分和context回放；若获后续实验授权，用预先冻结的独立dev来源组跑完整/no-skill/inline-skill三臂，统一每题预算并记录失败类型和token。现有50题继续用于回归展示，不能再作为独立泛化证明。"
+}

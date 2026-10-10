@@ -1,0 +1,365 @@
+{
+  "schema": "progression-prototype-audit/v1",
+  "created_at": "2026-10-10T11:06:04.431746+00:00",
+  "method": "Read-only local source and existing result audit; zero API/model calls; no benchmark rerun.",
+  "systems": [
+    {
+      "id": "one_call_baseline",
+      "label": "DeepSeek Flash direct-context single-call baseline",
+      "code": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\runner.py",
+      "entrypoint": "_baseline, line 281",
+      "relation": "Implemented in finance extension runner; not an execution of unmodified my_agent. Has a financial JSON/DSL instruction, so vanilla means no agent loop/tools, not an unprompted model.",
+      "same50_measured": true,
+      "calls": 50,
+      "configured_peak_cost_cny": "0.154202",
+      "metrics": {
+        "raw_final_answer": {
+          "correct": 13,
+          "total": 50,
+          "accuracy": 0.26,
+          "contract": "Posthoc extraction of existing first response answer field; ignores program validation."
+        },
+        "strict_accepted": {
+          "answer_correct": 9,
+          "execution_correct": 9,
+          "program_correct": 9,
+          "total": 50,
+          "accuracy": 0.18,
+          "completed": 12,
+          "validation_errors": 38
+        },
+        "shared_decoder_with_consistency": {
+          "answer_correct": 12,
+          "execution_correct": 12,
+          "program_correct": 10,
+          "total": 50,
+          "answer_accuracy": 0.24
+        },
+        "program_execution_only": {
+          "execution_correct": 29,
+          "program_correct": 27,
+          "total": 50,
+          "execution_accuracy": 0.58,
+          "contract": "Posthoc syntax normalization and program execution only; does not require correct emitted answer or source validation. Never describe as final-answer accuracy."
+        }
+      },
+      "raw_response_artifact": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\paired_baseline_20261010\\raw_response_payloads.json",
+      "per_case_trace_glob": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\paired_baseline_20261010\\baseline_r1\\*\\model_trace.jsonl"
+    },
+    {
+      "id": "original_my_agent",
+      "label": "Unmodified user repository at pinned initial commit",
+      "repository": "https://github.com/William-Li123/my_agent",
+      "commit": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "same50_measured": false,
+      "score": null,
+      "capabilities": [
+        "LangGraph planner/executor/tool/finalizer and replan routing",
+        "ToolRegistry with MCP stdio adapters",
+        "RAG using Qdrant and query expansion/reranking",
+        "Oracle-backed summary/persona memory and session history",
+        "OpenSandbox/Docker Python terminal and filesystem tools"
+      ],
+      "evaluation_finding": "No comparable original-prototype FinQA run found. Original tracked tests are generic agent/RAG smoke checks. Do not assign 0/50 or substitute the one-call baseline score.",
+      "search_scope": [
+        "git tree and source at pinned commit: no backend/finance; git grep finance|finqa|skill in backend and README returned no matches",
+        "Original agent smoke and Python tutorial RAG tests inspected",
+        "Existing output directories and final campaign/baseline artifacts in local preflight clone inspected"
+      ],
+      "limitations": [
+        "Optional persistent memory depends on configured Oracle service; session history is passed into AgentService by caller.",
+        "Original history/tool output uses character truncation, not current evidence-aware context machinery.",
+        "No task-skill or failure-to-skill subsystem found in original tracked source."
+      ]
+    },
+    {
+      "id": "first_finance_extension",
+      "label": "First finance extension of my_agent",
+      "same50_measured": true,
+      "source_finance_fingerprint": "1775554d7a4a024915f91c851c6303bb2a737db3be9362cb7b24ddde85295220",
+      "source_combined_fingerprint": "4a2413583588aa0f29e348d23def06ea49c18897685c837046ba0d222cc383cd",
+      "source_provenance": "Finance additions are untracked relative to original HEAD; pinned upstream commit alone does not identify this extension. Frozen source index is authoritative.",
+      "answer_correct": 35,
+      "execution_correct": 35,
+      "program_correct": 31,
+      "total": 50,
+      "answer_accuracy": 0.7,
+      "completed": 48,
+      "engineering_failures": 2,
+      "calls": 329,
+      "configured_peak_cost_cny": "3.76124824",
+      "settings": {
+        "model": "deepseek-flash",
+        "thinking": "disabled",
+        "temperature": 0,
+        "max_output_tokens": 2048,
+        "max_model_calls": 12,
+        "max_prompt_chars": 48000,
+        "mode": "terminal",
+        "backend": "docker",
+        "terminal_timeout_seconds": 60,
+        "per_attempt_cny": "1.5"
+      }
+    },
+    {
+      "id": "second_finance_agent",
+      "label": "Second finance-research-agent implementation",
+      "same50_measured": true,
+      "answer_correct": 42,
+      "total": 50,
+      "answer_accuracy": 0.84,
+      "program_accuracy": null,
+      "completed": 50,
+      "engineering_failures": 0,
+      "insufficient_evidence": 2,
+      "calls": 258,
+      "configured_peak_cost_cny": "1.62992416",
+      "runtime_fingerprint": "7cf1e9f3b6951fe00afcde5a819583a8c17c6ab4c2a0c58f2064ba4696e2b48c",
+      "skill_fingerprint": "adb29c064f2cc3db89f0ab68095bddfb626728986e9c47fd95522ae464f769c1",
+      "observed_tools": {
+        "finance_read_table": 50,
+        "finance_calculate": 48,
+        "finance_read_document": 14,
+        "finance_search_evidence": 17,
+        "context_read": 14,
+        "finance_terminal": 0
+      },
+      "observed_skills": {
+        "financial-ratios": 50,
+        "learned_skills": 0
+      }
+    }
+  ],
+  "comparability": {
+    "same_case_ids_and_order_verified": true,
+    "unique_cases": 50,
+    "dataset_revision": "0f16e2867befa6840783e58be38c9efb9229d742",
+    "old_manifest_sha256": "9b9b5693eac2cb5b8af3ffb48c955a8a92755f7bd54851979962ef8ab31a1364",
+    "paired_first_to_second": {
+      "both_correct": 34,
+      "improved": 8,
+      "regressed": 1,
+      "both_wrong": 7
+    },
+    "delta_percentage_points": 14,
+    "limitations": [
+      "Unmodified original my_agent was not measured on this cohort, so no numeric four-rung progression is established.",
+      "Baseline uses one model call per case versus multiple agent calls. Prompt, validators, execution mechanism and call budget also differ; cannot isolate an architecture or terminal causal effect.",
+      "Baseline raw answer 26%, strict accepted 18%, posthoc program execution 58% are different metrics and must remain separate.",
+      "First and second finance final-answer comparison uses identical case IDs/order; prior audit verified identical five-field inputs and rescored old predictions unchanged.",
+      "Second version same50 is a retrospective paired regression on known historical cases, not a newly untouched holdout.",
+      "Second version does not emit FinQA DSL programs, so official program accuracy is unavailable.",
+      "No finance_terminal calls and no learned-skill loads occurred in second-version same50; score gain cannot be attributed to those features.",
+      "Two second-version benchmark-correct cases have audited period/direction semantic risks; benchmark accuracy is not proof of full financial correctness.",
+      "Costs are configured peak-rate token estimates, not exact supplier invoices; cached token mix differs between runs."
+    ]
+  },
+  "metadata_issues": [
+    {
+      "artifact": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\paired_baseline_20261010\\experiment.json",
+      "field": "notice",
+      "value": "Inputs and hashes verified only. No model performance was measured.",
+      "finding": "Stale planning notice remains alongside mode=paid_model_evaluation, 50 call records and usage receipts. Actual run evidence establishes paid measured results; do not interpret this stale notice as no model evaluation."
+    }
+  ],
+  "source_evidence": [
+    {
+      "path": "backend/agent/graph.py",
+      "line": 11,
+      "claim": "LangGraph has planner, executor, tool and finalizer nodes; routing at line 34 uses pending_status. There is no separate LLM controller node.",
+      "revision": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "url": "https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/agent/graph.py#L11"
+    },
+    {
+      "path": "backend/agent/nodes.py",
+      "line": 47,
+      "claim": "Planner calls the model with task, history and tool catalog; executor starts at 89, tool at 156, finalizer at 224.",
+      "revision": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "url": "https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/agent/nodes.py#L47"
+    },
+    {
+      "path": "backend/agent/service.py",
+      "line": 51,
+      "claim": "AgentService.run initializes per-run state and accepts supplied conversation history; graph invocation is at 90.",
+      "revision": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "url": "https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/agent/service.py#L51"
+    },
+    {
+      "path": "backend/agent/tooling.py",
+      "line": 31,
+      "claim": "Default registry includes RAG, memory, terminal, MCP filesystem/fetch/bing tools; async MCP registration starts at 95.",
+      "revision": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "url": "https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/agent/tooling.py#L31"
+    },
+    {
+      "path": "backend/tools/mcp/core/client.py",
+      "line": 49,
+      "claim": "MCP client opens stdio transport and initializes ClientSession; tool discovery at 63 and call at 86.",
+      "revision": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "url": "https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/tools/mcp/core/client.py#L49"
+    },
+    {
+      "path": "backend/tools/terminal/tools.py",
+      "line": 58,
+      "claim": "Original repository already offers Python file execution and unittest tools backed by sandbox runtime.",
+      "revision": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "url": "https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/tools/terminal/tools.py#L58"
+    },
+    {
+      "path": "backend/sandbox/service.py",
+      "line": 122,
+      "claim": "Original repository already creates OpenSandbox sessions; resolves paths at 153 and executes sandbox commands at 197.",
+      "revision": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "url": "https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/sandbox/service.py#L122"
+    },
+    {
+      "path": "backend/memory/service.py",
+      "line": 82,
+      "claim": "Oracle-backed conversation append; compaction at 116; summary vector search at 185; persona retrieval at 231 and upsert at 253.",
+      "revision": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "url": "https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/memory/service.py#L82"
+    },
+    {
+      "path": "chat_sessions.py",
+      "line": 129,
+      "claim": "Session CLI supplies conversation history to agent.run and appends completed turns to optional persistent memory at 146.",
+      "revision": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "url": "https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/chat_sessions.py#L129"
+    },
+    {
+      "path": "backend/agent/state.py",
+      "line": 56,
+      "claim": "History, conversation and tool-output context are bounded primarily with character truncation; relevant functions begin at 56, 80 and 98.",
+      "revision": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "url": "https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/agent/state.py#L56"
+    },
+    {
+      "path": "backend/agent/test_smoke.py",
+      "line": 15,
+      "claim": "Smoke test asks to list indexed RAG documents; it is not a FinQA or numeric-answer benchmark.",
+      "revision": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "url": "https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/agent/test_smoke.py#L15"
+    },
+    {
+      "path": "backend/agent/test_python_tutorial_rag.py",
+      "line": 15,
+      "claim": "RAG test asks about Python for...else and checks RAG tool use plus nonempty answer; it is not a FinQA benchmark.",
+      "revision": "77216163b3dc8c29c74d8478e537f8261b236335",
+      "url": "https://github.com/William-Li123/my_agent/blob/77216163b3dc8c29c74d8478e537f8261b236335/backend/agent/test_python_tutorial_rag.py#L15"
+    },
+    {
+      "path": "backend/finance/runner.py",
+      "line": 281,
+      "claim": "One-call baseline receives the complete report fragment and requests JSON answer/program; only provider.invoke at 293, no agent graph or tool invocation.",
+      "revision": "first-finance-extension-working-tree",
+      "absolute_path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\runner.py"
+    },
+    {
+      "path": "backend/finance/runner.py",
+      "line": 301,
+      "claim": "Both baseline and agent accepted outputs require answer/program consistency, checked before final evaluation at 393.",
+      "revision": "first-finance-extension-working-tree",
+      "absolute_path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\runner.py"
+    },
+    {
+      "path": "backend/finance/runner.py",
+      "line": 368,
+      "claim": "Baseline call budget is exactly 1; agent path at 379 invokes build_finance_agent and enforces observed sources.",
+      "revision": "first-finance-extension-working-tree",
+      "absolute_path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\runner.py"
+    },
+    {
+      "path": "backend/finance/profile.py",
+      "line": 430,
+      "claim": "First finance extension retains AgentService/LangGraph architecture and selects finance tools, code or terminal execution.",
+      "revision": "first-finance-extension-working-tree",
+      "absolute_path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\profile.py"
+    },
+    {
+      "path": "backend/finance/profile.py",
+      "line": 458,
+      "claim": "First finance final validator checks observed source IDs, financial scope, program validity and answer/program consistency.",
+      "revision": "first-finance-extension-working-tree",
+      "absolute_path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\profile.py"
+    },
+    {
+      "path": "backend/finance/profile.py",
+      "line": 491,
+      "claim": "OfflineSmokeProvider is explicitly scripted wiring validation, not a model benchmark.",
+      "revision": "first-finance-extension-working-tree",
+      "absolute_path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\backend\\finance\\profile.py"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\paired_baseline_20261010\\experiment.json",
+      "sha256": "eff436a8823b8d17c2d938a1176ffa747327db7bacd41377c52b574f661f498b",
+      "bytes": 52081
+    },
+    {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\paired_baseline_20261010\\offline_fairness_audit.json",
+      "sha256": "c798fb3e17d76aee3eb856ff83f05950066f3e76ac6bd0cc41657b67a7e1c7a8",
+      "bytes": 144564
+    },
+    {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\paired_baseline_20261010\\raw_response_payloads.json",
+      "sha256": "47c0f5f7560eba433bafd4429a44679a59aa82f7aa9c97f16a04dd3eb71619ba",
+      "bytes": 27046
+    },
+    {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\paired_baseline_20261010\\baseline_r1\\predictions.json",
+      "sha256": "101fe1e1184f45cc0acbfe3999f5949da8abf3456781392c6b5258d7733d41f7",
+      "bytes": 17874
+    },
+    {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\paired_baseline_20261010\\baseline_r1\\scores.json",
+      "sha256": "920377a92252e7d8b11feca5d7a2424f595c60277d568743ba8c221bcb2748a8",
+      "bytes": 26391
+    },
+    {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\results.json",
+      "sha256": "2cb22c8e925fba1a2c9e343aacff73e717624b6d14f5ad0afbe8e96709dfe2e1",
+      "bytes": 29471
+    },
+    {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+      "sha256": "2a23300fe75165d702cd271ab921a37ee2338f964fba87778bcd0c7305cb4bef",
+      "bytes": 65625
+    },
+    {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\campaign.json",
+      "sha256": "99bd9b9d517c0f1e8fb6fb89a9a829c7e6018a2bfbe44d3f179f576d29993170",
+      "bytes": 479585
+    },
+    {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\frozen_source_index.json",
+      "sha256": "e994ede370876e4608ce042f6f4d13bb1768f90f1d41a686fd4e3c1b58d24672",
+      "bytes": 11781
+    },
+    {
+      "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\data\\finance\\final_20261010\\host\\manifest.json",
+      "sha256": "9b9b5693eac2cb5b8af3ffb48c955a8a92755f7bd54851979962ef8ab31a1364",
+      "bytes": 23045
+    },
+    {
+      "path": "F:\\scientific paper\\finance-research-agent\\docs\\results\\same50-comparison.json",
+      "sha256": "5041321e6dcd00c85b1f32d24e8d1de5427046161ae5a21dea2570cd5665ab0c",
+      "bytes": 27672
+    },
+    {
+      "path": "F:\\scientific paper\\finance-research-agent\\docs\\results\\same50-audit.json",
+      "sha256": "01ae100b9436b30fbf861c6bfa097e145e76f16846b6c7d7a06647c3ca98153b",
+      "bytes": 26498
+    },
+    {
+      "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\report.json",
+      "sha256": "11c435c5b3cb336fdaff7a57ef5a8abcbe8331a6689ce17ea62d62bc8875b753",
+      "bytes": 84163
+    },
+    {
+      "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\freeze.json",
+      "sha256": "947734738e12081c40580699eadc5e850fd39488e33aebf07382bc94b5958f22",
+      "bytes": 12801
+    }
+  ]
+}

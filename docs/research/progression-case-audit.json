@@ -1,0 +1,2383 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-10T11:09:54.233111+00:00",
+  "purpose": "对历史同50题8改善、1退步、8未得分的机制深查；不改模型、提示、技能、评分或标签，不调用API。",
+  "scope": {
+    "changed_cases": 9,
+    "new_incorrect_cases": 8,
+    "unique_inspected_cases": 16,
+    "full_50_financial_semantics_audited": false,
+    "prior_audit": {
+      "path": "F:\\scientific paper\\finance-research-agent\\docs\\results\\same50-audit.json"
+    },
+    "report": {
+      "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\report.json"
+    },
+    "new_report_sha256": "11c435c5b3cb336fdaff7a57ef5a8abcbe8331a6689ce17ea62d62bc8875b753"
+  },
+  "score_decomposition": {
+    "old_correct": 35,
+    "new_correct": 42,
+    "improved": 8,
+    "regressed": 1,
+    "net_gain_cases": 7,
+    "engineering_recoveries": {
+      "count": 2,
+      "cases": [
+        "RSG/2015/page_98.pdf-2",
+        "UNP/2016/page_52.pdf-3"
+      ]
+    },
+    "scoring_gains_with_semantic_risk": {
+      "count": 2,
+      "cases": [
+        "AMT/2016/page_49.pdf-1",
+        "PNC/2012/page_68.pdf-2"
+      ]
+    },
+    "other_observed_decision_changes": {
+      "count": 4,
+      "cases": [
+        "GIS/2017/page_31.pdf-1",
+        "GPN/2018/page_94.pdf-2",
+        "GS/2018/page_78.pdf-3",
+        "MMM/2013/page_75.pdf-1"
+      ]
+    },
+    "regression": [
+      "GIS/2018/page_110.pdf-2"
+    ],
+    "causal_attribution": "该分类解释可见轨迹，不是模块因果贡献；不得把8改善全称作金融质量提升。"
+  },
+  "all_50_runtime_counts": {
+    "old_paid_model_calls": 329,
+    "old_paid_calls_by_stage": {
+      "planner": 50,
+      "executor": 229,
+      "finalizer": 50
+    },
+    "old_paid_format_repairs_by_stage": {
+      "executor": 9,
+      "finalizer": 1
+    },
+    "old_non_model_trace_records": [
+      {
+        "case_id": "CDW/2015/page_93.pdf-2",
+        "line": 9,
+        "kind": "workflow_guard",
+        "additional_model_call": false
+      }
+    ],
+    "new_model_calls": 258,
+    "new_actions": {
+      "skill": 50,
+      "finance_read_table": 50,
+      "finance_calculate": 48,
+      "finish": 50,
+      "finance_read_document": 14,
+      "finance_search_evidence": 17,
+      "invalid": 15,
+      "context_read": 14
+    },
+    "new_context_compactions": 26,
+    "accounting_note": "旧model_trace共330行但只有329次LLM：CDW第9行是控制器无计费finish记录。按kind=llm统计，不能把每行都算API调用。",
+    "call_reduction_note": "旧有100次planner/finalizer总调用，新258次均在单loop。不能直接宣称省掉100次：新多了skill与一些context_read，最终净少71次。",
+    "all_50_skills": "全部只加载financial-ratios，没有生成技能参与。",
+    "execution_boundary": "新50题finance_terminal=0；直接金融工具由宿主执行。Docker离线工具测试另行证明，不属于这50题的执行路径。"
+  },
+  "deterministic_special_checks": {
+    "RSG": {
+      "sdk_call_summaries": [
+        {
+          "sequence": 1,
+          "name": "list_documents",
+          "success": true
+        },
+        {
+          "sequence": 2,
+          "name": "read_table",
+          "success": true
+        },
+        {
+          "sequence": 3,
+          "name": "search_evidence",
+          "success": true
+        },
+        {
+          "sequence": 4,
+          "name": "search_evidence",
+          "success": true
+        }
+      ],
+      "terminal_status": "completed",
+      "exit_code": 0,
+      "recursive_computation_marker_matches": [
+        "outputs[2].result",
+        "outputs[3].result"
+      ],
+      "all_sdk_calls_readonly": true,
+      "readonly_fallback_disabled_by_result_wrapper": true
+    },
+    "MMM": {
+      "correct_result_remained_in_later_model_inputs": [
+        {
+          "model_trace_line": 6,
+          "stage": "executor",
+          "correct_calculation_value_in_input": true,
+          "operand_517_in_input": true,
+          "operand_476_in_input": true,
+          "calculation_id_in_input": true
+        },
+        {
+          "model_trace_line": 7,
+          "stage": "finalizer",
+          "correct_calculation_value_in_input": true,
+          "operand_517_in_input": true,
+          "operand_476_in_input": true,
+          "calculation_id_in_input": true
+        }
+      ],
+      "conclusion": "旧模型忽略仍在输入中的正确证据；不是上下文物理丢失。"
+    }
+  },
+  "source_code_references": {
+    "old_context_fail": {
+      "source": {
+        "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\frozen_source\\backend\\finance\\context.py",
+        "line": 119
+      },
+      "claim": "精确结果/来源投影超过 observation budget 时抛 ContextBudgetError。"
+    },
+    "old_context_misclassification": {
+      "source": {
+        "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\frozen_source\\backend\\finance\\context.py",
+        "line": 178
+      },
+      "claim": "has_computed_value 递归按任意键名 answer/result/value 等识别计算，readonly 降级要求它为 False；非 readonly 在189行重新抛异常。"
+    },
+    "old_final_contract": {
+      "source": {
+        "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\frozen_source\\backend\\finance\\profile.py",
+        "line": 249
+      },
+      "claim": "finalizer 要求 answer/program/explanation/sources 字段。"
+    },
+    "old_final_validate": {
+      "source": {
+        "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\frozen_source\\backend\\finance\\profile.py",
+        "line": 458
+      },
+      "claim": "检查证据、有限范围领域规则、执行 FinQA DSL；执行失败尝试 AST→DSL，再核对答案和程序一致。"
+    },
+    "old_repairs": {
+      "source": {
+        "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\frozen_source\\backend\\finance\\profile.py",
+        "line": 321
+      },
+      "claim": "格式或验证失败最多一次计费修复；重复读取仍失败时可由控制器追加无模型调用的 finish 记录。"
+    },
+    "old_ast_failure": {
+      "source": {
+        "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\frozen_source\\backend\\finance\\program.py",
+        "line": 21
+      },
+      "claim": "DSL 规范化的 AST 解析失败产生 Program must be a numeric arithmetic expression。"
+    },
+    "old_program_consistency": {
+      "source": {
+        "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\frozen_source\\backend\\finance\\runner.py",
+        "line": 301
+      },
+      "claim": "数值答案必须与自身预测程序执行结果五位小数一致，不能证明程序选数和口径正确。"
+    },
+    "old_scoring": {
+      "source": {
+        "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\frozen_source\\backend\\finance\\evaluation.py",
+        "line": 70
+      },
+      "claim": "custom_answer_matches 清理千位逗号并将预测四舍五入五位，与原始 exe_ans 比较。"
+    },
+    "new_single_loop": {
+      "source": {
+        "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\agent.py",
+        "line": 107
+      },
+      "claim": "同一循环每步调用模型，允许 skill/tool/finish；finish 经校验直接完成，无额外 planner/finalizer 调用。"
+    },
+    "new_skill_gate": {
+      "source": {
+        "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\agent.py",
+        "line": 146
+      },
+      "claim": "计算前必须已加载 skill；错误写入上下文继续，连续4次失败才终止。"
+    },
+    "new_archive": {
+      "source": {
+        "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\context.py",
+        "line": 19
+      },
+      "claim": "每次完整 action/observation 落地事件档案；context_read 对已存在档案按窗口回读。"
+    },
+    "new_projection": {
+      "source": {
+        "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\context.py",
+        "line": 34
+      },
+      "claim": "工具 envelope 去重；超长 observation 保留 excerpt 并明确 incomplete 和回读要求。"
+    },
+    "new_context_budget": {
+      "source": {
+        "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\context.py",
+        "line": 59
+      },
+      "claim": "按上下文字符预算保留较新事件，旧事件变成档案索引；这是提取式压缩，不是语义总结模型。"
+    },
+    "new_evidence_validate": {
+      "source": {
+        "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\validation.py",
+        "line": 25
+      },
+      "claim": "引用必须已观察，回答需证据；拒答 answer 必须为 null。"
+    },
+    "new_calculation_validate": {
+      "source": {
+        "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\core\\validation.py",
+        "line": 49
+      },
+      "claim": "数值回答必须引用成功计算回执，结果与回执值一致、输入证据包含在 sources；没有通用年份/方向/分母语义检验。"
+    },
+    "new_benchmark_note": {
+      "source": {
+        "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\evaluation\\runner.py",
+        "line": 9
+      },
+      "claim": "评测提示使用 raw fraction，不进行仅用于显示的乘100；与少数原始标注口径并非完全一致。"
+    },
+    "new_score": {
+      "source": {
+        "path": "F:\\scientific paper\\finance-research-agent\\src\\finagent\\evaluation\\runner.py",
+        "line": 15
+      },
+      "claim": "答案数值双方四舍五入五位，completed 且 answered 才得分；未执行官方预测程序比较。"
+    }
+  },
+  "changed_cases": [
+    {
+      "case_id": "AMT/2016/page_49.pdf-1",
+      "question": "for the quarter ended march 312015 what was the percentage change in the share price from the highest to the lowest",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": "0.08510011778563015312131919905771495877503",
+      "new_answer": 0.09301577084003862,
+      "gold_answer": 0.09302,
+      "old_program": "subtract(101.88, 93.21), divide(#0, 101.88)",
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "方向/分母解释改变，得分提升但语义风险",
+      "old_counts": {
+        "paid_model_calls": 7,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 5,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 0,
+        "model_trace_records": 7,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 4,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 4,
+        "actions": {
+          "skill": 1,
+          "finance_read_document": 1,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 0
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=AMT/2016/page_49.pdf-1.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\004_41b9b9da44d8\\model_trace.jsonl",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\004_41b9b9da44d8\\model_trace.jsonl",
+            "line": 5
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\004_41b9b9da44d8\\model_trace.jsonl",
+            "line": 6
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\004_41b9b9da44d8\\model_trace.jsonl",
+            "line": 7
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\004_41b9b9da44d8\\tool_trace.jsonl",
+            "line": 3
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\004_41b9b9da44d8\\tool_trace.jsonl",
+            "line": 4
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_003\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_003\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_003\\model\\step_004.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_003\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_003\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_003\\input_documents\\c614c92a99982528a425815ee5e467460949055dc8f101940e62570637a5515c.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "new_calculation_validate",
+        "new_score"
+      ],
+      "old_facts": [
+        "旧 planner 比较两种分母后倾向以最高价为基数；工具读到101.88和93.21。",
+        "旧计算(101.88-93.21)/101.88成功，executor 与 finalizer 保留该结果；无格式失败、无上下文省略。"
+      ],
+      "new_facts": [
+        "新计算(101.88-93.21)/93.21并直接 finish；源数值没有改变。",
+        "问题写highest to lowest，而新解释写lowest to highest；数值匹配gold但方向表述反转。"
+      ],
+      "inference": "只能确认分母变化带来评分变化；不能将其认定为无争议金融质量提升，也不能归因于skill。",
+      "semantic_risk": true,
+      "observed_old_format_errors": [],
+      "observed_new_errors": []
+    },
+    {
+      "case_id": "GIS/2017/page_31.pdf-1",
+      "question": "in 2017 what was the percent of the total future estimated cash payments under existing contractual obligations associated with long-term debt that was due in 2018",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": "0.1941516709511568123393316195372750642674",
+      "new_answer": 0.0728777169324295,
+      "gold_answer": 0.07288,
+      "old_program": "divide(604.2, 3112.0)",
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "分母口径由某年所有义务改为全部年份长期债务",
+      "old_counts": {
+        "paid_model_calls": 6,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 4,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 0,
+        "model_trace_records": 6,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 3,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 5,
+        "actions": {
+          "skill": 1,
+          "finance_read_table": 2,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 0
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=GIS/2017/page_31.pdf-1.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\013_6fafbc1964db\\model_trace.jsonl",
+            "line": 3
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\013_6fafbc1964db\\model_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\013_6fafbc1964db\\model_trace.jsonl",
+            "line": 5
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\013_6fafbc1964db\\model_trace.jsonl",
+            "line": 6
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\013_6fafbc1964db\\tool_trace.jsonl",
+            "line": 2
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\013_6fafbc1964db\\tool_trace.jsonl",
+            "line": 3
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_012\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_012\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_012\\model\\step_004.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_012\\model\\step_005.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_012\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_012\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_012\\input_documents\\00c855bae3c874b4381b02fcf3a634e5a50c858bb79ee102b0e17be7b7d0befc.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "new_calculation_validate"
+      ],
+      "old_facts": [
+        "旧检索已返回604.2、3112.0和8290.6；不是缺少正确分母证据。",
+        "旧把2018年全部合同义务3112.0作分母，计算604.2/3112.0；最终解释也提到长期债务总额8290.6但未采用。"
+      ],
+      "new_facts": [
+        "新再次读取表中有关行，用长期债务合计8290.6作分母，计算604.2/8290.6。",
+        "计算与gold吻合，未发生格式修复、上下文压缩或工具错误。"
+      ],
+      "inference": "取数范围/分母语义选择改善是直接观察；skill、无planner或不同工具界面的因果贡献尚无消融证据。",
+      "observed_old_format_errors": [],
+      "observed_new_errors": []
+    },
+    {
+      "case_id": "GIS/2018/page_110.pdf-2",
+      "question": "what portion of the total noncancelable future lease commitments are due in fiscal year of 2019?",
+      "old_correct": true,
+      "new_correct": false,
+      "old_answer": "0.2456642231360629358126229215090291435723",
+      "new_answer": 0.2459807073954984,
+      "gold_answer": 0.24566,
+      "old_program": "divide(137.4, 559.3)",
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "租赁口径扩大造成唯一配对退步",
+      "old_counts": {
+        "paid_model_calls": 7,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 5,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 1,
+        "model_trace_records": 7,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 3,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 4,
+        "actions": {
+          "skill": 1,
+          "finance_read_table": 1,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 0
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=GIS/2018/page_110.pdf-2.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\014_8fc20d4c0bf4\\model_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\014_8fc20d4c0bf4\\model_trace.jsonl",
+            "line": 5
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\014_8fc20d4c0bf4\\model_trace.jsonl",
+            "line": 6
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\014_8fc20d4c0bf4\\model_trace.jsonl",
+            "line": 7
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\014_8fc20d4c0bf4\\tool_trace.jsonl",
+            "line": 2
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\014_8fc20d4c0bf4\\tool_trace.jsonl",
+            "line": 3
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_013\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_013\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_013\\model\\step_004.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_013\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_013\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_013\\input_documents\\5832bbe9fdbab3aef19a517a4bd02eddd39aec1d46644c982c3ecc15455b2473.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "new_calculation_validate",
+        "new_score"
+      ],
+      "old_facts": [
+        "旧表格同时有经营与资本租赁，最终仅用经营租赁137.4/559.3，匹配gold。",
+        "旧一次executor格式修复后成功计算；这不是旧工程失败。"
+      ],
+      "new_facts": [
+        "新把经营与资本租赁合并，计算(137.4+0.3)/(559.3+0.5)，与gold不符。",
+        "完整证据、正确算术和有效回执均通过；校验器无法判断题目total应对应哪一口径。"
+      ],
+      "inference": "确定的评分退步来自范围选择，不是浮点精度；问题含total带来解释空间，仍按原标注计错。",
+      "observed_old_format_errors": [
+        {
+          "line": 4,
+          "stage": "executor",
+          "error": "Invalid executor JSON at line 1, column 919: Expecting ',' delimiter. Escape JSON string content once. Prefer single-quoted Python strings inside code; close tool_arguments before top-level reasoning, step_focus and advance_to_next_step."
+        }
+      ],
+      "observed_new_errors": []
+    },
+    {
+      "case_id": "GPN/2018/page_94.pdf-2",
+      "question": "what was the value in thousands of unvested restricted stock and performance awards at the weighted-averagegrant-datefair value as of december 31 , 2018?\\\\n",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": "108.51",
+      "new_answer": 117624.84,
+      "gold_answer": 117624.84,
+      "old_program": "divide(108.51, const_1)",
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "每股公允价值改为股数乘每股价值",
+      "old_counts": {
+        "paid_model_calls": 5,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 3,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 0,
+        "model_trace_records": 5,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 2,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 10,
+        "actions": {
+          "finance_read_table": 1,
+          "context_read": 5,
+          "invalid": 1,
+          "skill": 1,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 7,
+        "tool_or_validation_errors": 1
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=GPN/2018/page_94.pdf-2.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\019_150cfb4e3ad5\\model_trace.jsonl",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\019_150cfb4e3ad5\\model_trace.jsonl",
+            "line": 3
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\019_150cfb4e3ad5\\model_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\019_150cfb4e3ad5\\model_trace.jsonl",
+            "line": 5
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\019_150cfb4e3ad5\\tool_trace.jsonl",
+            "line": 2
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\model\\step_001.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\model\\step_004.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\model\\step_005.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\model\\step_006.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\model\\step_007.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\model\\step_008.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\model\\step_009.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\model\\step_010.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_018\\input_documents\\0767681983ff44a09fc12384a4d052d197aa0622617b704c03b96f03b6274e0a.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "new_archive",
+        "new_context_budget",
+        "new_skill_gate",
+        "new_calculation_validate"
+      ],
+      "old_facts": [
+        "旧一次批量读取已看到1084千股和每股108.51；planner假设为单个披露值，预计仅可能做单位转换。",
+        "executor/finalizer直接回答108.51，并输出divide(108.51,const_1)；有价格与股数证据不等于使用了正确量纲关系。"
+      ],
+      "new_facts": [
+        "新使用5次context_read窗口回读较大表格档案，7次上下文压缩，随后计算1084*108.51=117624.84。",
+        "首次计算因未load skill被拒，加载financial-ratios后重算成功；本题总调用由5增至10。"
+      ],
+      "inference": "单位/聚合语义变正确可核查；旧已有同一证据，不能声称增益来自新增数据源。planner单值假设可能造成锚定，但属推断。",
+      "observed_old_format_errors": [],
+      "observed_new_errors": [
+        {
+          "step": 7,
+          "error": "Load the most relevant skill before executing financial calculations or code"
+        }
+      ]
+    },
+    {
+      "case_id": "GS/2018/page_78.pdf-3",
+      "question": "what are the pre-tax earnings in 2016 , in billions?",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": null,
+      "new_answer": 1.136,
+      "gold_answer": 1.136,
+      "old_program": null,
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "从直接检索2016数值转为由2017增长关系反推",
+      "old_counts": {
+        "paid_model_calls": 12,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 10,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 2,
+        "model_trace_records": 12,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 8,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 8,
+        "actions": {
+          "finance_read_table": 1,
+          "finance_search_evidence": 2,
+          "finance_read_document": 1,
+          "invalid": 1,
+          "skill": 1,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 1
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=GS/2018/page_78.pdf-3.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\model_trace.jsonl",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\model_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\model_trace.jsonl",
+            "line": 5
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\model_trace.jsonl",
+            "line": 6
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\model_trace.jsonl",
+            "line": 8
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\model_trace.jsonl",
+            "line": 9
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\model_trace.jsonl",
+            "line": 12
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\tool_trace.jsonl",
+            "line": 3
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\tool_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\tool_trace.jsonl",
+            "line": 5
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\tool_trace.jsonl",
+            "line": 6
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\tool_trace.jsonl",
+            "line": 7
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\022_e9b3e4fa372d\\tool_trace.jsonl",
+            "line": 8
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_021\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_021\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_021\\model\\step_004.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_021\\model\\step_005.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_021\\model\\step_006.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_021\\model\\step_007.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_021\\model\\step_008.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_021\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_021\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_021\\input_documents\\a0f1ae78e060500fcebfb7254156d3f634d675307b7500bba637f3359567bc96.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "old_repairs",
+        "new_single_loop",
+        "new_skill_gate"
+      ],
+      "old_facts": [
+        "旧planner明确预期直接报告单项值、除单位转换外无需计算。",
+        "旧6次search_evidence执行均围绕直接2016税前利润；已返回2017年1.42及25%文字，两次重复读取校验修复仍未采用反推。",
+        "旧最终以2016数值未直接出现为由null；正确关系线索在executor与finalizer输入内仍可见。"
+      ],
+      "new_facts": [
+        "新搜索后再读全文，计算1.42/(1+0.25)=1.136。",
+        "原句25% higher than后被抽取拼接为geographic data；同页前文存在2017 versus 2016标题，比较基期由段落上下文支持而非原句完整明说。",
+        "新有一次加载skill前计算被拦截，恢复后成功；无context压缩。"
+      ],
+      "inference": "可确认从直接值检索转成关系推导；2016基期是上下文推断。不能独立证明去掉planner造成该变化。",
+      "observed_old_format_errors": [
+        {
+          "line": 5,
+          "stage": "executor",
+          "error": "Identical read-only requests already succeeded in this turn. Reuse observed evidence, change the retrieval parameters if something is missing, or finish with an explicit scope assumption; do not repeat the same successful search."
+        },
+        {
+          "line": 8,
+          "stage": "executor",
+          "error": "Identical read-only requests already succeeded in this turn. Reuse observed evidence, change the retrieval parameters if something is missing, or finish with an explicit scope assumption; do not repeat the same successful search."
+        }
+      ],
+      "observed_new_errors": [
+        {
+          "step": 5,
+          "error": "Load the most relevant skill before executing financial calculations or code"
+        }
+      ]
+    },
+    {
+      "case_id": "MMM/2013/page_75.pdf-1",
+      "question": "what was the ratio of the company contribution in 2011 to the amount in 2013 to the us pension contributions",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": null,
+      "new_answer": 1.0861344537815125,
+      "gold_answer": 1.08613,
+      "old_program": null,
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "旧已有正确计算但后续决策拒答，新保留计算结论",
+      "old_counts": {
+        "paid_model_calls": 7,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 5,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 0,
+        "model_trace_records": 7,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 4,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 10,
+        "actions": {
+          "skill": 1,
+          "finance_read_table": 3,
+          "finance_search_evidence": 2,
+          "context_read": 2,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 6,
+        "tool_or_validation_errors": 1
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=MMM/2013/page_75.pdf-1.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\031_8c22662d2e62\\model_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\031_8c22662d2e62\\model_trace.jsonl",
+            "line": 5
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\031_8c22662d2e62\\model_trace.jsonl",
+            "line": 6
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\031_8c22662d2e62\\model_trace.jsonl",
+            "line": 7
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\031_8c22662d2e62\\tool_trace.jsonl",
+            "line": 3
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\031_8c22662d2e62\\tool_trace.jsonl",
+            "line": 4
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_030\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_030\\model\\step_004.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_030\\model\\step_005.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_030\\model\\step_006.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_030\\model\\step_007.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_030\\model\\step_008.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_030\\model\\step_009.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_030\\model\\step_010.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_030\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_030\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_030\\input_documents\\b5d2850151c66ec052e151b8595f01aeb55c458093bb4da330dd56dd44bc68df.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "new_single_loop",
+        "new_archive",
+        "new_calculation_validate"
+      ],
+      "old_facts": [
+        "旧工具第3行检索2011/2013养老金贡献，第4行已经成功计算517/476=1.0861344537815…并有真实证据ID。",
+        "旧model_trace第6行executor输入仍含正确计算值和517/476变量，但输出反称只有税率表；第7行finalizer输入同样仍含计算结果却延续null。",
+        "全部7条context_trace均completed、omitted=[]，因此不能说上下文压缩删除了养老金证据。"
+      ],
+      "new_facts": [
+        "新使用叙述检索、2次context_read、6次上下文压缩，并从表列越界错误恢复。",
+        "新最终再次计算517/476后立即finish，结果匹配gold；本题模型调用由7增至10。"
+      ],
+      "inference": "准确描述为已有正确中间结果被旧模型忽略，新模型保持了输出一致性；“新增检索能力补足旧缺失”或“旧context物理丢失”均不受轨迹支持。",
+      "corrects_previous_audit_category": "docs/results/same50-audit.json 中 narrative_evidence_retrieval 为粗分类，本次深查补充：旧已检索且计算正确。",
+      "observed_old_format_errors": [],
+      "observed_new_errors": [
+        {
+          "step": 5,
+          "action": {
+            "action": "tool",
+            "arguments": {
+              "document_id": "MMM/2013/page_75.pdf-1",
+              "row_start": 0,
+              "row_end": 9,
+              "columns": [
+                0,
+                1,
+                2,
+                3,
+                4
+              ]
+            },
+            "tool": "finance_read_table"
+          },
+          "error": "Column index is outside the table row."
+        }
+      ]
+    },
+    {
+      "case_id": "PNC/2012/page_68.pdf-2",
+      "question": "what was the percentage change in the commercial mortgage loans designated for sale at fair value from 2008 to 2009",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": null,
+      "new_answer": -0.08422301304863582,
+      "gold_answer": -0.08422,
+      "old_program": null,
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "以非请求年份替代缺失年份，得分提升但期间语义违反",
+      "old_counts": {
+        "paid_model_calls": 5,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 3,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 0,
+        "model_trace_records": 5,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 2,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 4,
+        "actions": {
+          "skill": 1,
+          "finance_read_table": 1,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 0
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=PNC/2012/page_68.pdf-2.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\038_5639f896cc60\\model_trace.jsonl",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\038_5639f896cc60\\model_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\038_5639f896cc60\\model_trace.jsonl",
+            "line": 5
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\038_5639f896cc60\\tool_trace.jsonl",
+            "line": 2
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_037\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_037\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_037\\model\\step_004.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_037\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_037\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_037\\input_documents\\ddc759927f9a12fcedaade4efdbf892e82b12416aa5160eee96d80f5f6c05399.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "new_calculation_validate",
+        "new_score"
+      ],
+      "old_facts": [
+        "问题要2008至2009，表只给2011的843和2012的772；旧planner明确不能替代年份。",
+        "旧executor已经在解释中写出可见年份约-0.0842，但因此非请求期间而null；不是旧不会算。"
+      ],
+      "new_facts": [
+        "新计算(772-843)/843并answered，数值碰巧匹配原gold。",
+        "新解释明确承认2008/2009未提供却仍用2011/2012；来源ID与算术回执有效不等于期间合规。"
+      ],
+      "inference": "期间替代是明确可核查事实，不能包装成金融推理改善；原gold与评分保留不变。",
+      "semantic_risk": true,
+      "observed_old_format_errors": [],
+      "observed_new_errors": []
+    },
+    {
+      "case_id": "RSG/2015/page_98.pdf-2",
+      "question": "in december 2015 what was the ratio of the restricted cash and marketable securities to the allowance for doubtful accounts",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": null,
+      "new_answer": 2.147751605995717,
+      "gold_answer": 2.14775,
+      "old_program": null,
+      "old_error": "ContextBudgetError: Latest observation's exact result/provenance exceeds its budget; emit a smaller scoped result or retrieve a narrower table",
+      "old_status": "error",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "只读结果被字段名误判为计算内容，触发上下文工程失败；新运行恢复",
+      "old_counts": {
+        "paid_model_calls": 3,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 2
+        },
+        "paid_format_repairs": 0,
+        "model_trace_records": 3,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 2,
+        "tool_errors": 0,
+        "context_errors": 1,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 5,
+        "actions": {
+          "skill": 1,
+          "finance_read_table": 1,
+          "finance_search_evidence": 1,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 0
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=RSG/2015/page_98.pdf-2.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\042_ee9f78029e1f\\model_trace.jsonl",
+            "line": 2
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\042_ee9f78029e1f\\model_trace.jsonl",
+            "line": 3
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\042_ee9f78029e1f\\tool_trace.jsonl",
+            "line": 2
+          }
+        ],
+        "old_context_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\042_ee9f78029e1f\\context_trace.jsonl",
+            "line": 4
+          }
+        ],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_041\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_041\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_041\\model\\step_004.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_041\\model\\step_005.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_041\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_041\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_041\\input_documents\\3981c2ad14c35ecad04206163cbdc08f60bbb0c16418c853281fba777cdad936.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "old_context_fail",
+        "old_context_misclassification",
+        "new_projection",
+        "new_single_loop"
+      ],
+      "old_facts": [
+        "旧tool_trace第2行一次terminal批量调用list_documents/read_table/search_evidence/search_evidence，全成功且exit_code=0。",
+        "搜索结果被模型包装为{search:..., result: s1}和{search:..., result: s2}；没有finance.calculate。",
+        "旧context.py递归遇到任意result键即认为含计算值，readonly归档降级条件为False；context_trace第4行因16000字符observation预算抛错，在下一次executor之前终止。"
+      ],
+      "new_facts": [
+        "新read_table与search_evidence分两步调用，再计算100.3/46.7，完成得分。",
+        "新本题context_read=0、context_compactions=0；没有实际触发历史回读来恢复。"
+      ],
+      "inference": "旧误分类的源码谓词和结果结构可确定定位；新版改变调用粒度并完成，但未进行同一大observation跨上下文模块的反事实消融。",
+      "engineering_recovery": true,
+      "observed_old_format_errors": [],
+      "observed_new_errors": []
+    },
+    {
+      "case_id": "UNP/2016/page_52.pdf-3",
+      "question": "what percentage of total operating revenues from 2014-2016 is the revenue from coal?",
+      "old_correct": false,
+      "new_correct": true,
+      "old_answer": null,
+      "new_answer": 0.1491284110614219,
+      "gold_answer": 0.14913,
+      "old_program": null,
+      "old_error": "FinanceOutputError: Program must be a numeric arithmetic expression",
+      "old_status": "error",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "正确计算后DSL序列化失败，新用计算回执完成",
+      "old_counts": {
+        "paid_model_calls": 7,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 4,
+          "finalizer": 2
+        },
+        "paid_format_repairs": 1,
+        "model_trace_records": 7,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 3,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 5,
+        "actions": {
+          "skill": 1,
+          "finance_read_table": 2,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 0
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=UNP/2016/page_52.pdf-3.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\049_cabfe3789ea7\\model_trace.jsonl",
+            "line": 5
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\049_cabfe3789ea7\\model_trace.jsonl",
+            "line": 6
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\049_cabfe3789ea7\\model_trace.jsonl",
+            "line": 7
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\049_cabfe3789ea7\\tool_trace.jsonl",
+            "line": 3
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_048\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_048\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_048\\model\\step_004.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_048\\model\\step_005.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_048\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_048\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_048\\input_documents\\91dd89adefc4e5a4f1fe0fd770a89579f164728c5fa7a292479a76caf740bddc.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "old_final_contract",
+        "old_final_validate",
+        "old_ast_failure",
+        "old_program_consistency",
+        "new_calculation_validate"
+      ],
+      "old_facts": [
+        "旧tool_trace第3行已成功算煤炭收入9804、总收入65742与比值0.1491284110614…，executor第5行数值正确。",
+        "finalizer第6行嵌套DSL被拒为Only literal arithmetic and explicit const_N operands are supported；一次计费修复后第7行混用嵌套DSL与#中间变量，AST语法异常Program must be a numeric arithmetic expression，整题工程失败。"
+      ],
+      "new_facts": [
+        "新直接finance_calculate((2440+3237+4127)/(19941+21813+23988))，随后用计算回执finish。",
+        "新无需输出FinQA DSL，因此绕过的是额外输出契约故障，不是突然学会这道数学题。"
+      ],
+      "inference": "确定为工程恢复；因新不提交官方预测程序，不可将该恢复表述为程序准确率提升。",
+      "engineering_recovery": true,
+      "observed_old_format_errors": [
+        {
+          "line": 6,
+          "stage": "finalizer",
+          "error": "Only literal arithmetic and explicit const_N operands are supported"
+        },
+        {
+          "line": 7,
+          "stage": "finalizer",
+          "error": "Program must be a numeric arithmetic expression"
+        }
+      ],
+      "observed_new_errors": []
+    }
+  ],
+  "new_incorrect_cases_without_duplicate_regression": [
+    {
+      "case_id": "CDW/2015/page_93.pdf-2",
+      "question": "how much more money was expensed per outstanding basic weighted-average share in the year ended dec 31 , 2013 compared to the year ended dec 31 , 2014?",
+      "old_correct": false,
+      "new_correct": false,
+      "old_answer": null,
+      "new_answer": null,
+      "gold_answer": 1.26207,
+      "old_program": null,
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "insufficient_evidence",
+      "mechanism": "费用问题被锚定为EPS净利润，相关退休计划费用虽被读到仍未利用",
+      "old_counts": {
+        "paid_model_calls": 9,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 7,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 1,
+        "model_trace_records": 10,
+        "controller_non_model_records": 1,
+        "terminal_tool_calls": 5,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 7,
+        "actions": {
+          "skill": 1,
+          "finance_read_table": 1,
+          "finance_search_evidence": 2,
+          "finance_read_document": 2,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 0
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=CDW/2015/page_93.pdf-2.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\008_2b0cb6c8897f\\model_trace.jsonl",
+            "line": 5
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\008_2b0cb6c8897f\\model_trace.jsonl",
+            "line": 6
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\008_2b0cb6c8897f\\model_trace.jsonl",
+            "line": 7
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\008_2b0cb6c8897f\\model_trace.jsonl",
+            "line": 8
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\008_2b0cb6c8897f\\model_trace.jsonl",
+            "line": 9
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\008_2b0cb6c8897f\\model_trace.jsonl",
+            "line": 10
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\008_2b0cb6c8897f\\tool_trace.jsonl",
+            "line": 3
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\008_2b0cb6c8897f\\tool_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\008_2b0cb6c8897f\\tool_trace.jsonl",
+            "line": 5
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_007\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_007\\model\\step_004.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_007\\model\\step_005.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_007\\model\\step_006.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_007\\model\\step_007.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_007\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_007\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_007\\input_documents\\559cc4e93900ce6302873f9e68f2fd722f0741ec4235c64a69649babb60f1478.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "old_repairs",
+        "new_calculation_validate"
+      ],
+      "facts": [
+        "旧以expensed/per-share开始检索，后续连续改为net income/EPS；重复读取触发控制器无额外API的finish，最终null。",
+        "新read_document已包含2014费用21.9、2013费用17.3，但仍以净利润不存在为由null；新同样误解目标概念。",
+        "gold程序为156.6/17.3-170.6/21.9，与通常费用/股数方向存在标注疑点；保持原得分为错。"
+      ],
+      "category": "概念识别/已见证据未使用，并存标注方向疑点",
+      "observed_old_format_errors": [
+        {
+          "line": 7,
+          "stage": "executor",
+          "error": "Identical read-only requests already succeeded in this turn. Reuse observed evidence, change the retrieval parameters if something is missing, or finish with an explicit scope assumption; do not repeat the same successful search."
+        },
+        {
+          "line": 8,
+          "stage": "executor",
+          "error": "Identical read-only requests already succeeded in this turn. Reuse observed evidence, change the retrieval parameters if something is missing, or finish with an explicit scope assumption; do not repeat the same successful search."
+        }
+      ],
+      "observed_new_errors": []
+    },
+    {
+      "case_id": "DVN/2012/page_77.pdf-1",
+      "question": "what percentage of debt matured between 2016 and 2017?",
+      "old_correct": false,
+      "new_correct": false,
+      "old_answer": "0.1071673525377229080932784636488340192044",
+      "new_answer": 0.1071673525377229,
+      "gold_answer": 150,
+      "old_program": "add(500, 750), divide(#0, 11664)",
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "两系统同选期间合计占总债务，原标注要求年度比值",
+      "old_counts": {
+        "paid_model_calls": 6,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 4,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 0,
+        "model_trace_records": 6,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 3,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 5,
+        "actions": {
+          "finance_read_table": 1,
+          "invalid": 1,
+          "skill": 1,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 1
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=DVN/2012/page_77.pdf-1.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\010_d1e73b85265e\\model_trace.jsonl",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\010_d1e73b85265e\\model_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\010_d1e73b85265e\\model_trace.jsonl",
+            "line": 5
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\010_d1e73b85265e\\model_trace.jsonl",
+            "line": 6
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\010_d1e73b85265e\\tool_trace.jsonl",
+            "line": 2
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\010_d1e73b85265e\\tool_trace.jsonl",
+            "line": 3
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_009\\model\\step_001.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_009\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_009\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_009\\model\\step_004.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_009\\model\\step_005.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_009\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_009\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_009\\input_documents\\0e29b4051eb353335e73b95b152f4c30ef04089ed03b9e592bf4abb06b467bd0.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "new_benchmark_note",
+        "new_calculation_validate"
+      ],
+      "facts": [
+        "两系统均已有500、750、11664，计算(500+750)/11664≈0.10717。",
+        "原gold为750/500*100=150，目标关系和百分比尺度均不同；这不是只乘100就能修好。",
+        "新首次计算未load skill被拦截，再加载后仍计算同一个表达式。"
+      ],
+      "category": "问题关系/分母/百分比尺度不一致",
+      "observed_old_format_errors": [],
+      "observed_new_errors": [
+        {
+          "step": 2,
+          "error": "Load the most relevant skill before executing financial calculations or code"
+        }
+      ]
+    },
+    {
+      "case_id": "GPN/2008/page_78.pdf-1",
+      "question": "what is the average amortization expense related to customer-related intangible assets?",
+      "old_correct": false,
+      "new_correct": false,
+      "old_answer": null,
+      "new_answer": null,
+      "gold_answer": 292.21429,
+      "old_program": null,
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "insufficient_evidence",
+      "mechanism": "两系统均拒绝将最长寿命当统一摊销期",
+      "old_counts": {
+        "paid_model_calls": 5,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 3,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 0,
+        "model_trace_records": 5,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 2,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 5,
+        "actions": {
+          "skill": 1,
+          "finance_read_table": 1,
+          "finance_search_evidence": 1,
+          "finance_read_document": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 0
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=GPN/2008/page_78.pdf-1.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\017_ecef58ddebec\\model_trace.jsonl",
+            "line": 3
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\017_ecef58ddebec\\model_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\017_ecef58ddebec\\model_trace.jsonl",
+            "line": 5
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\017_ecef58ddebec\\tool_trace.jsonl",
+            "line": 2
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_016\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_016\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_016\\model\\step_004.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_016\\model\\step_005.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_016\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_016\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_016\\input_documents\\7f38e8d55b47a8ed00d7f00f2d7c374ce0fa7373cbca3871f80decf542a89e4f.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "new_evidence_validate",
+        "new_score"
+      ],
+      "facts": [
+        "旧和新均读到4091及up to 14 years，均返回null；没有取数丢失。",
+        "新解释明确提及4091/14只是需假设的粗略示例；原gold正使用该关系=292.21429。",
+        "拒答有保守假设依据但仍属标准题未答出，不加分；旧解释称millions、新称thousands，单位解释也发生变化但未改变null评分。"
+      ],
+      "category": "对标注隐含假设的拒答，仍计错",
+      "observed_old_format_errors": [],
+      "observed_new_errors": []
+    },
+    {
+      "case_id": "GPN/2010/page_89.pdf-4",
+      "question": "what is the percentage change in the total fair value of non-vested shares from 2009 to 2010?",
+      "old_correct": false,
+      "new_correct": false,
+      "old_answer": "-0.0643044619422572",
+      "new_answer": -0.06430446194225722,
+      "gold_answer": -0.04148,
+      "old_program": "multiply(713, 42), multiply(762, 42), subtract(#0, #1), multiply(762, 42), divide(#2, #3)",
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "两系统使用可见表42，原程序使用41",
+      "old_counts": {
+        "paid_model_calls": 7,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 5,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 0,
+        "model_trace_records": 7,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 4,
+        "tool_errors": 1,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 4,
+        "actions": {
+          "skill": 1,
+          "finance_read_table": 1,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 0
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=GPN/2010/page_89.pdf-4.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\018_133ae0dff853\\model_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\018_133ae0dff853\\model_trace.jsonl",
+            "line": 5
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\018_133ae0dff853\\tool_trace.jsonl",
+            "line": 2
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\018_133ae0dff853\\tool_trace.jsonl",
+            "line": 3
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\018_133ae0dff853\\tool_trace.jsonl",
+            "line": 4
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_017\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_017\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_017\\model\\step_004.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_017\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_017\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_017\\input_documents\\9a72c0888c65771c84d35fc40524306eddf36932609aacaf26a81bc8d8ec91d2.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "new_calculation_validate",
+        "new_score"
+      ],
+      "facts": [
+        "旧新均按2009年762*42与2010年713*42，算变化-0.06430446。",
+        "原gold用2009年762*41，得到-0.04148；可见2009非归属行的价格为42。",
+        "存在明确参考操作数与可见表冲突；不能按原gold改agent选数，也不调整此次原评分。"
+      ],
+      "category": "参考操作数与源表冲突",
+      "observed_old_format_errors": [],
+      "observed_new_errors": []
+    },
+    {
+      "case_id": "KHC/2018/page_132.pdf-2",
+      "question": "in july and august 2018 , what percent of debt carrying debt in december did they pay off?",
+      "old_correct": false,
+      "new_correct": false,
+      "old_answer": "0.08653846153846153846153846153846153846154",
+      "new_answer": 0.0865384615384615,
+      "gold_answer": 0.07965,
+      "old_program": "divide(2.7, 31.2)",
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "两系统均把年末债务余额作为偿还比例分母",
+      "old_counts": {
+        "paid_model_calls": 7,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 5,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 0,
+        "model_trace_records": 7,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 4,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 5,
+        "actions": {
+          "skill": 1,
+          "finance_read_document": 1,
+          "finance_search_evidence": 1,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 0
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=KHC/2018/page_132.pdf-2.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\027_edd21e395ee4\\model_trace.jsonl",
+            "line": 5
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\027_edd21e395ee4\\model_trace.jsonl",
+            "line": 6
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\027_edd21e395ee4\\model_trace.jsonl",
+            "line": 7
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\027_edd21e395ee4\\tool_trace.jsonl",
+            "line": 3
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\027_edd21e395ee4\\tool_trace.jsonl",
+            "line": 4
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_026\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_026\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_026\\model\\step_004.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_026\\model\\step_005.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_026\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_026\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_026\\input_documents\\7d407eeb9eaec6ab47cb0ccabacc0238a840f398978b20d570fdbe08c6e9f80f.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "new_calculation_validate"
+      ],
+      "facts": [
+        "旧新均检索到偿还2.7与年末债务31.2，算2.7/31.2。",
+        "gold使用2.7/(31.2+2.7)，相当于加回偿还额构造基数。",
+        "新已披露采用年末总债务账面值，但解释范围仍不匹配原标注。"
+      ],
+      "category": "偿还比例基数假设不一致",
+      "observed_old_format_errors": [],
+      "observed_new_errors": []
+    },
+    {
+      "case_id": "SNA/2012/page_110.pdf-1",
+      "question": "in 2012 what was the percent change in the number of shares that was not vested",
+      "old_correct": false,
+      "new_correct": false,
+      "old_answer": "-0.2800565770862800565770862800565770862801",
+      "new_answer": -0.28005657708628007,
+      "gold_answer": -905,
+      "old_program": "subtract(509, 707), divide(#0, 707)",
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "两系统计算百分比变化，原程序连续相减",
+      "old_counts": {
+        "paid_model_calls": 6,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 4,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 0,
+        "model_trace_records": 6,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 3,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 4,
+        "actions": {
+          "skill": 1,
+          "finance_read_table": 1,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 0
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=SNA/2012/page_110.pdf-1.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\043_c580262c4ae7\\model_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\043_c580262c4ae7\\model_trace.jsonl",
+            "line": 5
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\043_c580262c4ae7\\model_trace.jsonl",
+            "line": 6
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\043_c580262c4ae7\\tool_trace.jsonl",
+            "line": 2
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\043_c580262c4ae7\\tool_trace.jsonl",
+            "line": 3
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_042\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_042\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_042\\model\\step_004.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_042\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_042\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_042\\input_documents\\df775e19caa472a5ef42cf49ba56cbc53e00b067b85f3c274bdf87eafcef384c.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "new_benchmark_note",
+        "new_score"
+      ],
+      "facts": [
+        "旧新均按(509-707)/707=-0.2800566计算份数变化。",
+        "gold程序subtract(509,707),subtract(#0,707)=-905，与percent change语义明显不一致。",
+        "保留原gold并计错；不将可疑标注转为主观成功。"
+      ],
+      "category": "参考运算与问题语义冲突",
+      "observed_old_format_errors": [],
+      "observed_new_errors": []
+    },
+    {
+      "case_id": "SNA/2012/page_110.pdf-3",
+      "question": "what is the total fair value of the non-vested performance awards at beginning of year , ( in thousands ) ?",
+      "old_correct": false,
+      "new_correct": false,
+      "old_answer": "34551.09",
+      "new_answer": 34551.09,
+      "gold_answer": 658.13,
+      "old_program": "multiply(707, 48.87)",
+      "old_error": null,
+      "old_status": "completed",
+      "new_status": "completed",
+      "new_final_status": "answered",
+      "mechanism": "两系统按数量乘单价，原程序数量减单价",
+      "old_counts": {
+        "paid_model_calls": 6,
+        "paid_calls_by_stage": {
+          "planner": 1,
+          "executor": 4,
+          "finalizer": 1
+        },
+        "paid_format_repairs": 0,
+        "model_trace_records": 6,
+        "controller_non_model_records": 0,
+        "terminal_tool_calls": 3,
+        "tool_errors": 0,
+        "context_errors": 0,
+        "context_records_with_omissions": 0
+      },
+      "new_counts": {
+        "paid_model_calls": 5,
+        "actions": {
+          "finance_read_table": 1,
+          "invalid": 1,
+          "skill": 1,
+          "finance_calculate": 1,
+          "finish": 1
+        },
+        "context_compactions": 0,
+        "tool_or_validation_errors": 1
+      },
+      "artifact_references": {
+        "old_prediction": {
+          "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\first_test_predictions.json",
+          "field": "case_id=SNA/2012/page_110.pdf-3.prediction"
+        },
+        "old_model_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\044_d309a29e4f6d\\model_trace.jsonl",
+            "line": 4
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\044_d309a29e4f6d\\model_trace.jsonl",
+            "line": 5
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\044_d309a29e4f6d\\model_trace.jsonl",
+            "line": 6
+          }
+        ],
+        "old_tool_lines": [
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\044_d309a29e4f6d\\tool_trace.jsonl",
+            "line": 2
+          },
+          {
+            "path": "F:\\scientific paper\\research\\finance_agent_api_preflight_20261008\\my_agent\\output\\finance\\final_holdout_20261010\\044_d309a29e4f6d\\tool_trace.jsonl",
+            "line": 3
+          }
+        ],
+        "old_context_lines": [],
+        "new_steps": [
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_043\\model\\step_001.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_043\\model\\step_002.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_043\\model\\step_003.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_043\\model\\step_004.json",
+            "line": 1
+          },
+          {
+            "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_043\\model\\step_005.json",
+            "line": 1
+          }
+        ],
+        "new_trace": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_043\\trace.json",
+          "line": 1
+        },
+        "new_result": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_043\\result.json",
+          "line": 1
+        },
+        "input": {
+          "path": "F:\\scientific paper\\finance-research-agent\\runs\\same50_20261010\\runs\\case_043\\input_documents\\dbc4901060d5df09f1f24209b188369a4da13203573a40bc62c0cdc8c48edf4b.json",
+          "line": 1
+        }
+      },
+      "source_code_keys": [
+        "new_skill_gate",
+        "new_score"
+      ],
+      "facts": [
+        "旧新均计算707千股*48.87每股=34551.09千元。",
+        "gold程序subtract(707,48.87)=658.13，数量与单价相减有量纲疑点。",
+        "新加载skill的强制恢复不改变原数学关系；原gold仍计错。"
+      ],
+      "category": "参考运算量纲冲突",
+      "observed_old_format_errors": [],
+      "observed_new_errors": [
+        {
+          "step": 2,
+          "error": "Load the most relevant skill before executing financial calculations or code"
+        }
+      ]
+    }
+  ],
+  "eighth_incorrect_case_reference": "GIS/2018/page_110.pdf-2，见changed_cases中的唯一退步，避免重复复制同一轨迹。",
+  "evaluation_limits": [
+    "原35/50为答案准确率；旧程序执行准确率也为35/50、官方程序准确率为31/50，三者不可混称。",
+    "新42/50是既有raw numeric答案评分；新无预测FinQA DSL，官方程序准确率不适用。UNP增益部分来自输出契约变化。",
+    "旧custom scorer与新scorer实现微差在这50个旧预测上逐题零差异；不是此次+7的来源。",
+    "强制正确计算回执能防止抄错工具数值，却不能验证操作数是否属于正确年份、分母、方向、量纲或业务范围。",
+    "原始五字段输入、gold、运行/技能/配置冻结已在same50-audit.json审计；本次没有修改。",
+    "这一批历史50题有46个公司/年份组，且曾被查看；它不是新的独立holdout。",
+    "原标注存在范围、尺度、操作数及运算疑点；本审计保持原gold并照常计错，未主观补分。",
+    "上下文、工具接口、提示、模型运行配置、输出契约等同时变化，单次系统对比不证明某个模块造成增益。"
+  ],
+  "architecture_recommendations_as_hypotheses": [
+    {
+      "priority": "P0",
+      "proposal": "增加结构化问题意图与证据绑定：指标、期间、方向、分子/分母口径、单位、推导假设；finish前检查是否与请求一致。",
+      "motivating_cases": [
+        "PNC/2012/page_68.pdf-2",
+        "AMT/2016/page_49.pdf-1",
+        "GIS/2018/page_110.pdf-2",
+        "KHC/2018/page_132.pdf-2"
+      ],
+      "limit": "不能把原题答案或gold公式硬编码成规则；应在独立dev组验证。"
+    },
+    {
+      "priority": "P0",
+      "proposal": "对存在可信计算却转为拒答的路径，要求显式指出该计算为什么不满足原问题，并让输出引用最终选定计算或拒绝理由。",
+      "motivating_cases": [
+        "MMM/2013/page_75.pdf-1",
+        "PNC/2012/page_68.pdf-2"
+      ],
+      "limit": "不能强行将任何已有数字当答案；PNC表明拒答有时正是正确期间约束。"
+    },
+    {
+      "priority": "P1",
+      "proposal": "在检索无直接答案时允许显式金融关系推导，并记录基期/寿命等假设来源；同时设置重复检索转向或停止条件。",
+      "motivating_cases": [
+        "GS/2018/page_78.pdf-3",
+        "GPN/2008/page_78.pdf-1",
+        "CDW/2015/page_93.pdf-2"
+      ],
+      "limit": "关系推导与基准隐含假设必须区分；有业务歧义时可给条件答案而非伪装成披露值。"
+    },
+    {
+      "priority": "P1",
+      "proposal": "使用类型化宿主回执区分检索/计算，不依赖任意输出键名；给上下文溢出路径做固定轨迹重放。",
+      "motivating_cases": [
+        "RSG/2015/page_98.pdf-2"
+      ],
+      "limit": "先用离线轨迹验证工程恢复，再用独立真实题检查影响。"
+    },
+    {
+      "priority": "P1",
+      "proposal": "若需要FinQA程序指标，从真实计算表达式或计算DAG确定性生成受限DSL；避免再让独立finalizer重写一次程序。",
+      "motivating_cases": [
+        "UNP/2016/page_52.pdf-3"
+      ],
+      "limit": "需另行验证编译器和官方程序评分，不可由当前答案分数推断程序指标。"
+    }
+  ]
+}
