@@ -39,6 +39,29 @@ docker build -t finance-agent-terminal:local -f docker/Dockerfile .
 finagent doctor
 ```
 
+## Web 界面
+
+本地研究界面参考 Codex 的会话与工作区布局：左侧管理研究会话，中间提问和查看答案，侧面查看资料、执行过程和报告。支持上传文档、切换会话、追问、停止后续执行，以及查看 Skills 与学习候选。
+
+```powershell
+python -m pip install -e ".[web,documents]"
+cd frontend
+npm ci
+npm run build
+cd ..
+finagent --state .finagent web --port 8000
+```
+
+打开 **http://127.0.0.1:8000**。新分析从空资料开始，上传并选择自己的文档后提问。分析使用服务端的 `DEEPSEEK_API_KEY` 与已有预算账本；上传和预览不会调用模型。页面不接收或保存密钥，也不会初始化、重置或提高预算。
+
+Windows 已配置用户本地 DPAPI 加密凭据缓存时，可重复执行 `./scripts/start-local-web.ps1` 启动；脚本优先复用已有环境变量，否则解密 `%LOCALAPPDATA%/FinAgent/deepseek-key.dpapi` 到当前进程，关闭后恢复环境，不打印密钥或修改预算。可用 `-PythonExe`、`-State` 和 `-Frontend` 指定本地路径。
+
+开发时先启动上述 Python 服务，在另一个终端执行 `cd frontend; npm run dev`，访问 Vite 提供的本地地址。完整运行方法、接口和验证范围见 [前端与 Web 服务](docs/web-interface.md)。
+
+仓库提供一份从 Apple 官方财报整理的 [2024–2025 财年真实 CSV](examples/real-data/apple_fy2024_fy2025.csv)，以及 [配套问题](examples/real-data/Apple财务分析问题.txt)。可直接上传开展营收、利润率、产品与地域贡献分析。数据来源和口径随文件提供。
+
+![金融研究工作台：真实财报 CSV 预览](docs/screenshots/fin-agent-workspace.png)
+
 模型默认是 `deepseek-flash`，API 根地址为 `https://api.deepseek.com`。`platform.deepseek.com/api_keys` 是账户管理网页，不能作为模型接口。
 
 凭据仅从 `DEEPSEEK_API_KEY` 进程环境变量读取，不需要写入仓库。PowerShell 7 可用交互输入设置当前窗口的变量：
@@ -93,6 +116,8 @@ src/finagent/
   learning/          失败、候选、验证、晋升
   ingestion/         本地文档导入
   evaluation/        固定数据与宿主机评分
+  web/               本地 HTTP 接口、研究会话和运行任务
+frontend/            React/TypeScript 研究界面
 tests/               功能、边界、离线及 Docker 测试
 docs/                架构、工具、技能、运行与验收说明
 examples/            小型示例输入

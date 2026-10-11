@@ -44,6 +44,10 @@ def parser():
     root.add_argument("--state", type=Path, default=Path(".finagent"), help="Persistent state, memory, skills and one shared cost ledger")
     sub = root.add_subparsers(dest="command", required=True)
     sub.add_parser("doctor", help="Check installation and Docker; no model requests")
+    web = sub.add_parser("web", help="Start the local financial research interface")
+    web.add_argument("--host", default="127.0.0.1", choices=["127.0.0.1", "localhost", "::1"])
+    web.add_argument("--port", type=int, default=8000)
+    web.add_argument("--frontend", type=Path, help="Built frontend directory; defaults to frontend/dist")
     budget = sub.add_parser("budget")
     budget_sub = budget.add_subparsers(dest="operation", required=True)
     init = budget_sub.add_parser("init")
@@ -108,7 +112,13 @@ def parser():
 def main(argv=None) -> int:
     args = parser().parse_args(argv)
     try:
-        if args.command == "doctor":
+        if args.command == "web":
+            try:
+                from finagent.web import serve
+            except ImportError:
+                raise ValueError('Install the web extra first: python -m pip install -e ".[web,documents]"') from None
+            serve(args.state, host=args.host, port=args.port, frontend_dir=args.frontend)
+        elif args.command == "doctor":
             docker = shutil.which("docker")
             info = {"python": os.sys.version.split()[0], "docker_executable": docker,
                     "api_key_configured": bool(os.environ.get("DEEPSEEK_API_KEY")), "model_requests": 0}

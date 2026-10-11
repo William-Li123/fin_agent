@@ -1,0 +1,230 @@
+{
+  "company": "Apple Inc.",
+  "fiscal_periods": {
+    "FY2024": {
+      "start": "2023-10-01",
+      "end": "2024-09-28",
+      "weeks": 52
+    },
+    "FY2025": {
+      "start": "2024-09-29",
+      "end": "2025-09-27",
+      "weeks": 52
+    }
+  },
+  "basis": "US GAAP actual reported amounts; all numeric inputs are USD million",
+  "input_only": true,
+  "row_count": 39,
+  "csv_encoding": "UTF-8 with BOM; RFC 4180; CRLF",
+  "csv_sha256": "47aa3b8564b159d71b6055deef1e76976bfe19a1b4e121f75d578264d3ad0f74",
+  "sources": [
+    {
+      "url": "https://www.apple.com/newsroom/pdfs/fy2025-q4/FY25_Q4_Consolidated_Financial_Statements.pdf",
+      "title": "Apple FY2025 Q4 Consolidated Financial Statements",
+      "pages_used": [
+        1,
+        2,
+        3
+      ],
+      "audit_status": "News release condensed statements marked Unaudited; annual numbers cross-checked against audited FY2025 Form 10-K",
+      "sha256": "43e7f0730b3cce0fc37301a2f43c29712bbde6ab299d97c6df345fd0c754508a"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/aapl-20250927.htm",
+      "title": "Apple FY2025 Form 10-K",
+      "sections_checked": [
+        "Consolidated Statements of Operations p29",
+        "Consolidated Balance Sheets p31",
+        "Consolidated Statements of Cash Flows p33",
+        "Note 2 Revenue p36",
+        "Note 7 Income Taxes p41",
+        "Segment performance p22"
+      ]
+    }
+  ],
+  "validation": {
+    "numeric_values": 78,
+    "unique_metrics": 39,
+    "artifact_tool_csv_round_trip": true,
+    "source_reconciliations": [
+      {
+        "name": "产品与服务净销售额合计",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "四类产品净销售额合计",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "产品类别及服务合计",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "五个地域净销售额合计",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "销售成本合计",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "净销售额减销售成本等于毛利润",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "经营费用合计",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "毛利润减经营费用等于营业利润",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "营业利润加其他损益等于税前利润",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "税前利润减所得税费用等于净利润",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "资产等于负债加权益",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "三类现金流等于现金净增减",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "期初加净增减等于期末现金",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "现金流表期末与资产负债表现金核对",
+        "period": "FY2024",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "产品与服务净销售额合计",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "四类产品净销售额合计",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "产品类别及服务合计",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "五个地域净销售额合计",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "销售成本合计",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "净销售额减销售成本等于毛利润",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "经营费用合计",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "毛利润减经营费用等于营业利润",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "营业利润加其他损益等于税前利润",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "税前利润减所得税费用等于净利润",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "资产等于负债加权益",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "三类现金流等于现金净增减",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "期初加净增减等于期末现金",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      },
+      {
+        "name": "现金流表期末与资产负债表现金核对",
+        "period": "FY2025",
+        "difference_usd_million": 0,
+        "passed": true
+      }
+    ]
+  },
+  "notes": [
+    "FY columns are fiscal years, not calendar years. Balance sheet rows are period-end stocks.",
+    "Reported Gross margin row is gross profit amount, not a percentage.",
+    "Services is recorded once even though it appears in both income statement and revenue category table.",
+    "Product totals must not be added again to product detail; geographic and product-category breakdowns are different dimensions.",
+    "Capital expenditures and financing cash flows retain original statement negative signs.",
+    "State Aid impact is a signed component of income tax expense, already included in GAAP totals: FY2024 10246 and FY2025 -486.",
+    "CSV does not include calculated growth rates, margins, contribution shares, or model answers.",
+    "Original PDF downloaded and extracted in an ignored temporary directory; no complete Apple report distributed in repository."
+  ]
+}
